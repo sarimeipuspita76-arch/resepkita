@@ -1,0 +1,3548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dapur Resep - Temukan Resep Favoritmu</title>
+  <meta name="description" content="Landing page resep makanan interaktif dengan data real-time dari API. Temukan resep terbaru, populer, dan filter berdasarkan kategori.">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #e31c5f;
+      --primary-dark: #c0154f;
+      --primary-light: #ff4d7e;
+      --secondary: #ff6b35;
+      --accent: #ffc107;
+      --dark: #1a1a2e;
+      --light-bg: #fff5f7;
+      --text-muted: #6c757d;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    
+    /* ========== NAVBAR ========== */
+    .navbar {
+      background: linear-gradient(135deg, var(--primary) 0%, #ff2d6f 100%);
+      padding: 0.6rem 0;
+      box-shadow: 0 4px 20px rgba(227, 28, 95, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .navbar.scrolled {
+      padding: 0.4rem 0;
+      box-shadow: 0 6px 25px rgba(227, 28, 95, 0.4);
+    }
+    
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: white !important;
+    }
+    
+    .navbar-brand img {
+      height: 42px;
+      transition: transform 0.3s ease;
+    }
+    
+    .navbar-brand:hover img {
+      transform: scale(1.1) rotate(-5deg);
+    }
+    
+    .nav-link {
+      color: rgba(255,255,255,0.9) !important;
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem !important;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      color: white !important;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: white;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 60%;
+    }
+    
+    .search-box {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50px;
+      padding: 0.45rem 1.2rem;
+      color: white;
+      width: 220px;
+      transition: all 0.3s ease;
+    }
+    
+    .search-box::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .search-box:focus {
+      background: rgba(255,255,255,0.3);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+      width: 260px;
+    }
+    
+    .btn-nav {
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 0.4rem 1.2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-belanja {
+      background: white;
+      color: var(--primary);
+      border: none;
+    }
+    
+    .btn-belanja:hover {
+      background: #fff0f3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      color: var(--primary-dark);
+    }
+    
+    .btn-login {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    
+    .btn-login:hover {
+      background: white;
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    /* ========== HERO ========== */
+    .hero {
+      position: relative;
+      min-height: 90vh;
+      background: 
+        linear-gradient(105deg, rgba(227, 28, 95, 0.92) 0%, rgba(227, 28, 95, 0.75) 40%, rgba(255, 45, 111, 0.55) 70%, rgba(0,0,0,0.25) 100%),
+        url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center center / cover no-repeat;
+      background-attachment: fixed; /* parallax */
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 70% 50%, transparent 0%, rgba(0,0,0,0.15) 100%);
+      pointer-events: none;
+    }
+    
+    /* Parallax decorative elements */
+    .parallax-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 120%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.08"/><circle cx="80" cy="40" r="1.5" fill="white" opacity="0.06"/><circle cx="40" cy="70" r="1" fill="white" opacity="0.05"/><circle cx="70" cy="80" r="2" fill="white" opacity="0.07"/></svg>');
+      background-size: 150px;
+      animation: floatBg 30s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    @keyframes floatBg {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.95);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      margin-bottom: 1.5rem;
+    }
+    
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.25);
+    }
+    
+    .hero-title span {
+      background: linear-gradient(135deg, #ffc107, #ffeb3b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.9);
+      max-width: 520px;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.2);
+    }
+    
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .btn-hero-primary {
+      background: white;
+      color: var(--primary);
+      border: none;
+      border-radius: 50px;
+      padding: 0.85rem 2rem;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    
+    .btn-hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      color: var(--primary-dark);
+      background: #fff5f7;
+    }
+    
+    .btn-hero-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      border-radius: 50px;
+      padding: 0.85rem 2rem;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-hero-secondary:hover {
+      background: white;
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+    
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ffc107;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.85);
+    }
+    
+    .hero-image-wrapper {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .hero-main-img {
+      max-width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+      transition: transform 0.5s ease;
+      border: 4px solid rgba(255,255,255,0.3);
+    }
+    
+    .hero-main-img:hover {
+      transform: scale(1.03);
+    }
+    
+    .floating-card {
+      position: absolute;
+      background: white;
+      border-radius: 16px;
+      padding: 0.8rem 1rem;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: float 4s ease-in-out infinite;
+      z-index: 3;
+    }
+    
+    .floating-card img {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    
+    .floating-card .card-info h6 {
+      margin: 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .floating-card .card-info small {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    
+    .floating-card-1 {
+      top: 8%;
+      left: -8%;
+      animation-delay: 0s;
+    }
+    
+    .floating-card-2 {
+      bottom: 12%;
+      right: -5%;
+      animation-delay: 1.5s;
+    }
+    
+    .floating-card-3 {
+      top: 50%;
+      left: -12%;
+      animation-delay: 0.8s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    
+    .promo-banner {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      color: white;
+      margin-top: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .promo-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    
+    .promo-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+    
+    .promo-subtitle {
+      font-size: 1.05rem;
+      opacity: 0.95;
+    }
+    
+    /* ========== SECTION COMMON ========== */
+    section {
+      padding: 80px 0;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .section-badge {
+      display: inline-block;
+      background: rgba(227, 28, 95, 0.1);
+      color: var(--primary);
+      padding: 0.35rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+    
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 0.8rem;
+    }
+    
+    .section-desc {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+    }
+    
+    /* ========== RECIPE CARDS ========== */
+    .recipe-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      height: 100%;
+      border: 1px solid rgba(0,0,0,0.04);
+      cursor: pointer;
+    }
+    
+    .recipe-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 50px rgba(227, 28, 95, 0.18);
+    }
+    
+    .recipe-card .card-img-wrapper {
+      position: relative;
+      overflow: hidden;
+      height: 200px;
+    }
+    
+    .recipe-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .recipe-card:hover img {
+      transform: scale(1.1);
+    }
+    
+    .recipe-card .category-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--primary);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+    
+    .recipe-card .card-body {
+      padding: 1.25rem;
+    }
+    
+    .recipe-card .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .recipe-card .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .recipe-card .card-meta i {
+      color: var(--primary);
+    }
+
+    /* ========== POPULAR SECTION (Dapur Umami style) ========== */
+    .popular-section {
+      background: #fff0f3;
+      padding: 70px 0;
+    }
+
+    .popular-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin: 0;
+    }
+
+    .popular-subtitle {
+      color: #c9a227;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .lihat-lainnya {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .lihat-lainnya:hover {
+      color: var(--primary-dark);
+      gap: 6px;
+    }
+
+    .popular-tabs {
+      display: inline-flex;
+      background: white;
+      border-radius: 50px;
+      padding: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .popular-tabs .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 0.55rem 1.6rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .popular-tabs .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(227, 28, 95, 0.3);
+    }
+
+    .popular-tabs .tab-btn:not(.active):hover {
+      background: rgba(227, 28, 95, 0.08);
+    }
+
+    /* Popular recipe card style */
+    .pop-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+      transition: all 0.35s ease;
+      height: 100%;
+      cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .pop-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 14px 35px rgba(227, 28, 95, 0.15);
+    }
+
+    .pop-card .pop-img-wrap {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .pop-card .pop-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+
+    .pop-card:hover .pop-img-wrap img {
+      transform: scale(1.08);
+    }
+
+    .pop-card .teruji-badge {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: white;
+      color: var(--primary);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.25rem 0.55rem;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      letter-spacing: 0.3px;
+    }
+
+    .pop-card .teruji-badge i {
+      font-size: 0.7rem;
+    }
+
+    .pop-card .pop-body {
+      padding: 1rem 1.1rem 1.15rem;
+    }
+
+    .pop-card .pop-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 0.55rem;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.7em;
+    }
+
+    .pop-card .pop-official {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 0.65rem;
+    }
+
+    .pop-card .pop-official img {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+    }
+
+    .pop-card .pop-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .pop-card .pop-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pop-card .pop-meta .star { color: #f5a623; }
+    .pop-card .pop-meta .heart { color: #e31c5f; }
+    .pop-card .pop-meta .time { color: #f5a623; }
+
+    /* ========== RESEP HARI INI ========== */
+    .hari-ini-section {
+      background: #fff;
+      padding: 60px 0 70px;
+    }
+
+    .hari-ini-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+
+    .kalori-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #7cb342;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+    }
+
+    .lihat-detail-link {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .lihat-detail-link:hover {
+      color: var(--primary-dark);
+    }
+
+    .btn-ganti-menu {
+      border: 1.5px solid var(--primary);
+      background: white;
+      color: var(--primary);
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-ganti-menu:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .meal-slot-card {
+      border-radius: 18px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      height: 100%;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .meal-slot-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 14px 35px rgba(227, 28, 95, 0.15);
+    }
+
+    .meal-slot-header {
+      background: linear-gradient(90deg, #f48fb1 0%, #ec407a 50%, #ab47bc 100%);
+      color: white;
+      text-align: center;
+      padding: 0.65rem 1rem;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .meal-slot-header.sarapan {
+      background: linear-gradient(90deg, #f8bbd0 0%, #f48fb1 100%);
+    }
+
+    .meal-slot-header.siang {
+      background: linear-gradient(90deg, #f48fb1 0%, #ce93d8 100%);
+    }
+
+    .meal-slot-header.malam {
+      background: linear-gradient(90deg, #ce93d8 0%, #ab47bc 100%);
+    }
+
+    .meal-slot-img {
+      height: 200px;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+
+    .meal-slot-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+
+    .meal-slot-card:hover .meal-slot-img img {
+      transform: scale(1.06);
+    }
+
+    .meal-slot-name {
+      padding: 1rem 1.1rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1a1a2e;
+      text-align: center;
+      line-height: 1.35;
+      min-height: 3.2em;
+    }
+
+    .meal-slot-kcal {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #7cb342;
+      margin-top: 0.25rem;
+    }
+
+    .menu-pilihan-label {
+      font-weight: 600;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .menu-pilihan-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .menu-pilihan-btns .btn-menu-opt {
+      border: 1.5px solid #eee;
+      background: #fafafa;
+      color: #555;
+      border-radius: 50px;
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .menu-pilihan-btns .btn-menu-opt:hover,
+    .menu-pilihan-btns .btn-menu-opt.active {
+      border-color: var(--primary);
+      background: #fff5f7;
+      color: var(--primary);
+    }
+
+    /* ========== RESEP PILIHAN CAROUSEL ========== */
+    .pilihan-section {
+      background: #fff;
+      padding: 100px 0 80px;
+      display: none;
+      min-height: 100vh;
+    }
+
+    .pilihan-section.show {
+      display: block;
+    }
+
+    /* Sembunyikan section utama saat mode Resep Pilihan aktif */
+    body.pilihan-active #home,
+    body.pilihan-active #resep-terbaru,
+    body.pilihan-active #resep-populer,
+    body.pilihan-active #resep-hari-ini,
+    body.pilihan-active #kategori,
+    body.pilihan-active #cari,
+    body.pilihan-active #tentang,
+    body.pilihan-active #faq,
+    body.pilihan-active #kontak,
+    body.pilihan-active footer {
+      display: none !important;
+    }
+
+    /* Mode detail resep */
+    body.detail-active #home,
+    body.detail-active #resep-terbaru,
+    body.detail-active #resep-populer,
+    body.detail-active #resep-hari-ini,
+    body.detail-active #resep-pilihan,
+    body.detail-active #kategori,
+    body.detail-active #cari,
+    body.detail-active #tentang,
+    body.detail-active #faq,
+    body.detail-active #kontak,
+    body.detail-active footer {
+      display: none !important;
+    }
+
+    .recipe-detail-section {
+      display: none;
+      background: #fff;
+      padding: 100px 0 80px;
+      min-height: 100vh;
+    }
+
+    .recipe-detail-section.show {
+      display: block;
+    }
+
+    .detail-breadcrumb {
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-breadcrumb a {
+      color: #888;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .detail-breadcrumb a:hover {
+      color: var(--primary);
+    }
+
+    .detail-breadcrumb .current {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .detail-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-image-wrap {
+      position: relative;
+      max-width: 860px;
+      margin: 0 auto 1.5rem;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      background: #f0f0f0;
+    }
+
+    .detail-image-wrap img {
+      width: 100%;
+      height: auto;
+      max-height: 500px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .detail-image-wrap .teruji-stamp {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      width: 72px;
+      height: 72px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      border: 3px solid var(--primary);
+    }
+
+    .detail-image-wrap .teruji-stamp span {
+      font-size: 0.55rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .detail-image-wrap .heart-btn {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      color: #ccc;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .detail-image-wrap .heart-btn:hover {
+      color: #ff6b8a;
+      transform: scale(1.1);
+    }
+
+    .detail-image-wrap .heart-btn.active {
+      color: var(--primary);
+      animation: heartPop 0.35s ease;
+    }
+
+    .detail-image-wrap .heart-btn.active i::before {
+      content: "\f415"; /* bi-heart-fill */
+    }
+
+    @keyframes heartPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    .detail-rating-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .detail-rating-row .stars {
+      color: #ddd;
+      letter-spacing: 3px;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    .detail-rating-row .stars i {
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .detail-rating-row .stars i:hover,
+    .detail-rating-row .stars i.filled {
+      color: #f5a623;
+    }
+
+    .detail-rating-row .stars i:hover {
+      transform: scale(1.2);
+    }
+
+    .detail-rating-row .rating-num {
+      font-weight: 700;
+      color: #333;
+      font-size: 1.1rem;
+      min-width: 40px;
+    }
+
+    .detail-rating-row .share-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid #ddd;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .detail-rating-row .share-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #fff5f7;
+    }
+
+    .detail-meta-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .detail-meta-row span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    .detail-meta-row i {
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+
+    .nutrition-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.5rem 2.5rem;
+      margin-bottom: 0.5rem;
+      padding: 1.2rem 0;
+    }
+
+    .nutrition-item {
+      text-align: center;
+    }
+
+    .nutrition-item .n-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.4rem;
+      font-size: 1.1rem;
+      color: white;
+    }
+
+    .nutrition-item .n-label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .nutrition-item .n-value {
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .nutrition-note {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+
+    .tentang-section {
+      background: #fdf8f0;
+      padding: 2.5rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .tentang-section h3 {
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      color: #1a1a2e;
+    }
+
+    .tentang-section p {
+      max-width: 800px;
+      margin: 0 auto 1rem;
+      line-height: 1.8;
+      color: #555;
+      text-align: justify;
+    }
+
+    .detail-section-title {
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.4rem;
+      margin: 2rem 0 1.5rem;
+      color: #1a1a2e;
+    }
+
+    .bahan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.8rem;
+      max-width: 900px;
+      margin: 0 auto 2rem;
+    }
+
+    .bahan-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1rem;
+      background: #fff5f7;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .bahan-item i {
+      color: var(--primary);
+      font-size: 0.7rem;
+    }
+
+    .langkah-list {
+      max-width: 800px;
+      margin: 0 auto;
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+    }
+
+    .langkah-list li {
+      counter-increment: step;
+      position: relative;
+      padding: 1rem 1rem 1rem 3.5rem;
+      margin-bottom: 0.8rem;
+      background: #fafafa;
+      border-radius: 12px;
+      line-height: 1.7;
+      color: #444;
+    }
+
+    .langkah-list li::before {
+      content: counter(step);
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .pilihan-section .breadcrumb {
+      font-size: 0.9rem;
+    }
+
+    .pilihan-section .breadcrumb-item a {
+      color: var(--primary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .pilihan-section .breadcrumb-item.active {
+      color: #888;
+    }
+
+    .pilihan-main-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 0.2rem;
+    }
+
+    .pilihan-subtitle {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .pilihan-desc {
+      color: #888;
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+
+    .pilihan-carousel-wrapper {
+      position: relative;
+      margin-top: 2rem;
+      overflow: hidden;
+    }
+
+    .pilihan-carousel {
+      display: flex;
+      gap: 1.25rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      padding: 10px 4px 20px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .pilihan-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pilihan-card {
+      flex: 0 0 280px;
+      height: 360px;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      scroll-snap-align: start;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .pilihan-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+    }
+
+    .pilihan-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .pilihan-card:hover img {
+      transform: scale(1.08);
+    }
+
+    .pilihan-card .pilihan-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.4rem;
+      color: white;
+    }
+
+    .pilihan-card .pilihan-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.6rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .pilihan-card .resep-count {
+      display: inline-flex;
+      align-items: center;
+      background: #7cb342;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 50px;
+      width: fit-content;
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--primary);
+      cursor: pointer;
+      z-index: 5;
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+
+    .pilihan-carousel-wrapper:hover .carousel-nav {
+      opacity: 1;
+    }
+
+    .carousel-nav:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .carousel-nav.prev { left: 8px; }
+    .carousel-nav.next { right: 8px; }
+
+    .pilihan-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 1.2rem;
+    }
+
+    .pilihan-dots .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f8bbd0;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pilihan-dots .dot.active {
+      background: var(--primary);
+      width: 28px;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .pilihan-card {
+        flex: 0 0 240px;
+        height: 320px;
+      }
+      .carousel-nav {
+        opacity: 1;
+      }
+    }
+    
+    /* ========== CATEGORIES ========== */
+    .category-section {
+      background: var(--light-bg);
+    }
+    
+    .category-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 2px solid transparent;
+      height: 100%;
+    }
+    
+    .category-card:hover, .category-card.active {
+      border-color: var(--primary);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(227, 28, 95, 0.15);
+    }
+    
+    .category-card .cat-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(227,28,95,0.1), rgba(255,107,53,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.8rem;
+      transition: all 0.3s ease;
+    }
+    
+    .category-card:hover .cat-icon {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    .category-card h6 {
+      font-weight: 700;
+      color: var(--dark);
+      margin: 0;
+    }
+    
+    /* ========== SEARCH SECTION ========== */
+    .search-section {
+      background: linear-gradient(135deg, var(--primary) 0%, #ff2d6f 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .search-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    
+    .search-box-lg {
+      background: white;
+      border-radius: 60px;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .search-box-lg input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 0.8rem 1.5rem;
+      font-size: 1.1rem;
+      border-radius: 60px;
+      background: transparent;
+    }
+    
+    .search-box-lg .btn-search {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.8rem 2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .search-box-lg .btn-search:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+
+    .search-suggest {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+      z-index: 1000;
+      max-height: 340px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .search-suggest.show {
+      display: block;
+    }
+
+    .search-suggest-nav {
+      top: calc(100% + 6px);
+      min-width: 280px;
+      right: 0;
+      left: auto;
+    }
+
+    .suggest-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.2s ease;
+      color: #333;
+    }
+
+    .suggest-item:last-child {
+      border-bottom: none;
+    }
+
+    .suggest-item:hover {
+      background: #fff5f7;
+    }
+
+    .suggest-item img {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .suggest-item .suggest-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .suggest-item .suggest-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .suggest-item .suggest-cat {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .suggest-empty {
+      padding: 14px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .suggest-loading {
+      padding: 14px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+    
+    /* ========== ABOUT ========== */
+    .about-img {
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      transition: transform 0.4s ease;
+    }
+    
+    .about-img:hover {
+      transform: scale(1.03);
+    }
+    
+    .feature-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(227,28,95,0.1), rgba(255,107,53,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+    
+    /* ========== FAQ ========== */
+    .accordion-item {
+      border: none;
+      margin-bottom: 1rem;
+      border-radius: 12px !important;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    
+    .accordion-button {
+      font-weight: 600;
+      color: var(--dark);
+      background: white;
+      border: none;
+      padding: 1.2rem 1.5rem;
+    }
+    
+    .accordion-button:not(.collapsed) {
+      background: var(--primary);
+      color: white;
+      box-shadow: none;
+    }
+    
+    .accordion-button:focus {
+      box-shadow: none;
+      border: none;
+    }
+    
+    .accordion-button::after {
+      filter: none;
+    }
+    
+    .accordion-body {
+      padding: 1.2rem 1.5rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    
+    /* ========== CONTACT ========== */
+    .contact-form {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    }
+    
+    .form-control, .form-select {
+      border-radius: 12px;
+      padding: 0.85rem 1.2rem;
+      border: 2px solid #eee;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(227, 28, 95, 0.1);
+    }
+    
+    .btn-submit {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.9rem 2.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    
+    .btn-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(227, 28, 95, 0.35);
+      color: white;
+    }
+    
+    .contact-info-card {
+      background: linear-gradient(135deg, var(--primary), #ff2d6f);
+      border-radius: 20px;
+      padding: 2.5rem;
+      color: white;
+      height: 100%;
+    }
+    
+    .contact-info-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+    
+    .contact-info-item i {
+      font-size: 1.4rem;
+      opacity: 0.9;
+    }
+    
+    /* ========== FOOTER ========== */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.8);
+      padding: 60px 0 30px;
+    }
+    
+    footer h5 {
+      color: white;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    
+    footer a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+    
+    footer a:hover {
+      color: var(--primary-light);
+      padding-left: 5px;
+    }
+    
+    .social-links a {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.6rem;
+      transition: all 0.3s ease;
+      color: white;
+    }
+    
+    .social-links a:hover {
+      background: var(--primary);
+      transform: translateY(-3px);
+      padding-left: 0;
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 1.5rem;
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    
+    /* ========== MODAL ========== */
+    .modal-content {
+      border-radius: 20px;
+      border: none;
+      overflow: hidden;
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary), #ff2d6f);
+      color: white;
+      border: none;
+    }
+    
+    .modal-header .btn-close {
+      filter: brightness(0) invert(1);
+    }
+    
+    .ingredient-list, .instruction-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .ingredient-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .ingredient-list li::before {
+      content: '•';
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .instruction-list li {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      counter-increment: step;
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    
+    .instruction-list {
+      counter-reset: step;
+    }
+    
+    .instruction-list li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.8rem;
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    /* ========== LOADING ========== */
+    .spinner-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 3rem;
+    }
+    
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+      color: var(--primary);
+    }
+    
+    /* ========== BACK TO TOP ========== */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 5px 20px rgba(227, 28, 95, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 999;
+      border: none;
+    }
+    
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .back-to-top:hover {
+      transform: translateY(-5px);
+      background: var(--primary-dark);
+    }
+    
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 991px) {
+      .hero {
+        min-height: auto;
+        padding: 120px 0 60px;
+        text-align: center;
+        background-attachment: scroll; /* better performance on mobile */
+      }
+      
+      .hero-subtitle {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .hero-cta {
+        justify-content: center;
+      }
+      
+      .hero-stats {
+        justify-content: center;
+      }
+      
+      .floating-card {
+        display: none;
+      }
+      
+      .search-box {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+      
+      .navbar .d-flex {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      section {
+        padding: 50px 0;
+      }
+      
+      .promo-title {
+        font-size: 1.3rem;
+      }
+      
+      .contact-form {
+        padding: 1.5rem;
+      }
+    }
+    
+    /* Scrollspy active */
+    .nav-link.active {
+      color: white !important;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="100">
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+    <div class="container">
+      <a class="navbar-brand" href="javascript:void(0)" onclick="goHome()">
+        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="21" cy="21" r="21" fill="white"/>
+          <path d="M21 10C16.5 10 13 13.5 13 18C13 20.5 14.2 22.7 16 24.1V30H26V24.1C27.8 22.7 29 20.5 29 18C29 13.5 25.5 10 21 10Z" fill="#e31c5f"/>
+          <circle cx="21" cy="17" r="3" fill="white"/>
+          <rect x="17" y="28" width="8" height="2" rx="1" fill="#e31c5f"/>
+        </svg>
+        <span>Dapur Resep</span>
+      </a>
+      
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list text-white fs-3"></i>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link active" href="#home">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="#resep-terbaru">Resep Terbaru</a></li>
+          <li class="nav-item"><a class="nav-link" href="#resep-populer">Populer</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kategori">Kategori</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cari">Cari</a></li>
+          <li class="nav-item"><a class="nav-link" href="#tentang">Tentang</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kontak">Kontak</a></li>
+        </ul>
+        
+        <div class="d-flex align-items-center gap-2">
+          <a href="#kontak" class="btn btn-nav btn-login d-none d-md-inline-block">
+            Login / Daftar
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="home">
+    <div class="parallax-bg"></div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
+          <div class="hero-badge">
+            <i class="bi bi-stars"></i> Resep Lezat Setiap Hari
+          </div>
+          <h1 class="hero-title">
+            Temukan <span>Resep Favorit</span> untuk Keluarga
+          </h1>
+          <p class="hero-subtitle">
+            Ribuan resep dari berbagai kategori, lengkap dengan bahan, langkah memasak, dan tips spesial. Masak jadi lebih mudah dan menyenangkan!
+          </p>
+          
+          <div class="hero-cta">
+            <a href="#resep-terbaru" class="btn btn-hero-primary">
+              <i class="bi bi-egg-fried me-2"></i> Jelajahi Resep
+            </a>
+            <a href="#kategori" class="btn btn-hero-secondary">
+              <i class="bi bi-grid me-2"></i> Lihat Kategori
+            </a>
+          </div>
+          
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-number" id="statRecipes">700+</div>
+              <div class="stat-label">Resep</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">14</div>
+              <div class="stat-label">Kategori</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">50+</div>
+              <div class="stat-label">Negara</div>
+            </div>
+          </div>
+          
+          <div class="promo-banner" data-aos="zoom-in" data-aos-delay="300">
+            <div class="promo-title">🎉 Promo Spesial!</div>
+            <div class="promo-subtitle">Temukan inspirasi memasak setiap hari — gratis & tanpa daftar!</div>
+          </div>
+        </div>
+        
+        <div class="col-lg-6 hero-image-wrapper mt-5 mt-lg-0" data-aos="fade-left" data-aos-duration="1000">
+          <div class="position-relative">
+            <img src="https://www.themealdb.com/images/media/meals/1529444830.jpg" alt="Resep Favorit" class="hero-main-img" id="heroImage">
+            
+            <div class="floating-card floating-card-1">
+              <img src="https://www.themealdb.com/images/media/meals/ustsqw1468257874.jpg" alt="Resep">
+              <div class="card-info">
+                <h6>Spaghetti Bolognese</h6>
+                <small><i class="bi bi-star-fill text-warning"></i> 4.8 • 30 menit</small>
+              </div>
+            </div>
+            
+            <div class="floating-card floating-card-2">
+              <img src="https://www.themealdb.com/images/media/meals/sxysrt1468259714.jpg" alt="Resep">
+              <div class="card-info">
+                <h6>Chicken Curry</h6>
+                <small><i class="bi bi-star-fill text-warning"></i> 4.9 • 45 menit</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RESEP TERBARU ========== -->
+  <section id="resep-terbaru">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-badge"><i class="bi bi-clock-history me-1"></i> Baru Ditambahkan</span>
+        <h2 class="section-title">Resep Terbaru</h2>
+        <p class="section-desc">Inspirasi memasak terbaru yang siap kamu coba hari ini</p>
+      </div>
+      
+      <div class="row g-4" id="latestRecipes">
+        <div class="col-12 spinner-wrapper">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4" data-aos="fade-up">
+        <button class="btn btn-hero-primary" onclick="loadMoreLatest()">
+          <i class="bi bi-arrow-repeat me-2"></i> Muat Lebih Banyak
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RESEP POPULER ========== -->
+  <section id="resep-populer" class="popular-section">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-end mb-4" data-aos="fade-up">
+        <div>
+          <h2 class="popular-title mb-2">Resep Populer</h2>
+          <p class="popular-subtitle mb-0">Resep yang paling banyak dikunjungi oleh para member Dapur Resep.</p>
+        </div>
+        <a href="javascript:void(0)" class="lihat-lainnya" onclick="showResepPilihan()">Lihat lainnya <i class="bi bi-chevron-right"></i></a>
+      </div>
+
+      <!-- Tabs -->
+      <div class="popular-tabs mb-4" data-aos="fade-up" data-aos-delay="100">
+        <button class="tab-btn active" id="tabOfficial" onclick="switchPopularTab('official')">Official Resep</button>
+        <button class="tab-btn" id="tabMember" onclick="switchPopularTab('member')">Dari Member</button>
+      </div>
+      
+      <div class="row g-3 g-lg-4" id="popularRecipes">
+        <div class="col-12 spinner-wrapper">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RESEP HARI INI ========== -->
+  <section id="resep-hari-ini" class="hari-ini-section">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4" data-aos="fade-up">
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <h2 class="hari-ini-title mb-0">Resep Hari Ini</h2>
+          <span class="kalori-badge" id="totalKaloriBadge">Total kalori: — kkal</span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <button type="button" class="btn-ganti-menu" onclick="acakMenuHariIni()">
+            <i class="bi bi-arrow-repeat"></i> Ganti Menu
+          </button>
+          <a href="javascript:void(0)" class="lihat-detail-link" onclick="showMenuHariIniDetail()">Lihat Detail <i class="bi bi-chevron-right"></i></a>
+        </div>
+      </div>
+
+      <div class="row g-3" id="menuHariIniCards" data-aos="fade-up" data-aos-delay="100">
+        <!-- cards: Sarapan, Siang, Malam -->
+      </div>
+
+      <div class="menu-pilihan-wrap mt-4" data-aos="fade-up">
+        <p class="menu-pilihan-label mb-2">Pilih menu lain:</p>
+        <div class="menu-pilihan-btns" id="menuPilihanBtns">
+          <!-- alternative menu buttons -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RESEP PILIHAN (Carousel) ========== -->
+  <section id="resep-pilihan" class="pilihan-section">
+    <div class="container">
+      <nav aria-label="breadcrumb" class="mb-3" data-aos="fade-up">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item">
+            <a href="javascript:void(0)" onclick="hideResepPilihan()" title="Kembali ke Beranda">
+              <i class="bi bi-house-door"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Resep</li>
+        </ol>
+      </nav>
+
+      <div class="text-center mb-4" data-aos="fade-up">
+        <h2 class="pilihan-main-title">Resep</h2>
+        <h3 class="pilihan-subtitle">Resep Pilihan</h3>
+        <p class="pilihan-desc">Temukan resep-resep pilihan untuk sajian terbaik setiap hari!</p>
+      </div>
+
+      <!-- Carousel -->
+      <div class="pilihan-carousel-wrapper" data-aos="fade-up" data-aos-delay="100">
+        <div class="pilihan-carousel" id="pilihanCarousel">
+          <!-- Cards injected by JS -->
+        </div>
+        <button class="carousel-nav prev" id="carouselPrev" aria-label="Sebelumnya">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="carousel-nav next" id="carouselNext" aria-label="Berikutnya">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Dots -->
+      <div class="pilihan-dots" id="pilihanDots"></div>
+    </div>
+  </section>
+
+  <!-- ========== KATEGORI ========== -->
+  <section id="kategori" class="category-section">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-badge"><i class="bi bi-grid-3x3-gap me-1"></i> Jelajahi</span>
+        <h2 class="section-title">Kategori Resep</h2>
+        <p class="section-desc">Pilih kategori favoritmu dan temukan resep yang cocok</p>
+      </div>
+      
+      <div class="row g-3 justify-content-center" id="categoryList">
+        <!-- Categories will be loaded here -->
+      </div>
+      
+      <div class="row g-4 mt-4" id="filteredRecipes">
+        <!-- Filtered results -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SEARCH ========== -->
+  <section id="cari" class="search-section">
+    <div class="container position-relative" data-aos="fade-up">
+      <div class="text-center mb-4">
+        <h2 class="section-title text-white">Cari Resep Impianmu</h2>
+        <p class="text-white-50">Ketik nama resep, bahan, atau jenis makanan yang ingin kamu masak</p>
+      </div>
+      
+      <div class="search-box-lg position-relative">
+        <i class="bi bi-search ms-3 text-muted fs-5"></i>
+        <input type="text" id="mainSearch" placeholder="Contoh: Chicken, Pasta, Cake, Soup..." autocomplete="off">
+        <button class="btn btn-search" onclick="performSearch()">
+          Cari Sekarang
+        </button>
+        <div class="search-suggest" id="mainSuggest"></div>
+      </div>
+      
+      <div class="row g-4 mt-5" id="searchResults">
+        <!-- Search results -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TENTANG ========== -->
+  <section id="tentang">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6" data-aos="fade-right">
+          <img src="https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg" alt="Tentang Dapur Resep" class="about-img img-fluid">
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <span class="section-badge"><i class="bi bi-heart me-1"></i> Tentang Kami</span>
+          <h2 class="section-title text-start">Dapur Resep — Inspirasi Memasak untuk Semua</h2>
+          <p class="text-muted mb-4">
+            Dapur Resep adalah platform resep makanan interaktif yang menghadirkan ribuan resep dari seluruh dunia. Kami percaya bahwa memasak adalah seni yang bisa dinikmati siapa saja, dari pemula hingga chef profesional.
+          </p>
+          
+          <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-lightning-charge"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">Data Real-time</h6>
+              <p class="text-muted mb-0 small">Resep selalu update dari API terpercaya dengan informasi lengkap bahan & langkah.</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-phone"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">Responsif di Semua Perangkat</h6>
+              <p class="text-muted mb-0 small">Akses mudah dari smartphone, tablet, maupun desktop tanpa kehilangan kenyamanan.</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-funnel"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">Filter & Pencarian Cepat</h6>
+              <p class="text-muted mb-0 small">Temukan resep berdasarkan kategori, nama, atau bahan dalam hitungan detik.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAQ ========== -->
+  <section id="faq" style="background: var(--light-bg);">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-badge"><i class="bi bi-question-circle me-1"></i> Bantuan</span>
+        <h2 class="section-title">Pertanyaan yang Sering Diajukan</h2>
+        <p class="section-desc">Temukan jawaban atas pertanyaan umum seputar Dapur Resep</p>
+      </div>
+      
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-delay="100">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                  Apakah semua resep gratis?
+                </button>
+              </h2>
+              <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Ya! Semua resep di Dapur Resep sepenuhnya gratis. Kamu bisa mengakses, mencari, dan menyimpan inspirasi memasak tanpa biaya atau registrasi wajib.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                  Dari mana data resep berasal?
+                </button>
+              </h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Data resep kami bersumber dari TheMealDB, database resep open-source yang berisi ratusan resep dari berbagai negara dan kategori. Informasi mencakup nama, bahan, instruksi, dan gambar.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                  Apakah website ini responsif di HP?
+                </button>
+              </h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Tentu saja! Website dibangun dengan Bootstrap 5 sehingga tampil sempurna di desktop, tablet, maupun smartphone. Navigasi dan konten tetap nyaman di layar kecil.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                  Bagaimana cara mencari resep berdasarkan kategori?
+                </button>
+              </h2>
+              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Scroll ke bagian "Kategori Resep", lalu klik kategori yang diinginkan (misalnya Chicken, Dessert, Seafood). Resep terkait akan muncul secara otomatis di bawahnya.
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                  Bisakah saya melihat langkah memasak secara detail?
+                </button>
+              </h2>
+              <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Ya. Klik kartu resep apa pun, maka modal detail akan terbuka menampilkan gambar, daftar bahan lengkap dengan takaran, serta langkah-langkah memasak secara berurutan.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== KONTAK ========== -->
+  <section id="kontak">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-badge"><i class="bi bi-envelope me-1"></i> Hubungi Kami</span>
+        <h2 class="section-title">Ada Pertanyaan atau Saran?</h2>
+        <p class="section-desc">Kami siap mendengar feedback dan membantu kamu</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-lg-5" data-aos="fade-right">
+          <div class="contact-info-card">
+            <h4 class="fw-bold mb-4">Informasi Kontak</h4>
+            
+            <div class="contact-info-item">
+              <i class="bi bi-geo-alt"></i>
+              <div>
+                <strong>Alamat</strong><br>
+                Jakarta, Indonesia
+              </div>
+            </div>
+            
+            <div class="contact-info-item">
+              <i class="bi bi-envelope"></i>
+              <div>
+                <strong>Email</strong><br>
+                hello@dapurresep.id
+              </div>
+            </div>
+            
+            <div class="contact-info-item">
+              <i class="bi bi-telephone"></i>
+              <div>
+                <strong>Telepon</strong><br>
+                +62 812-3456-7890
+              </div>
+            </div>
+            
+            <div class="contact-info-item">
+              <i class="bi bi-clock"></i>
+              <div>
+                <strong>Jam Operasional</strong><br>
+                Senin - Jumat: 09.00 - 17.00 WIB
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <div class="social-links">
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-twitter-x"></i></a>
+                <a href="#"><i class="bi bi-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-7" data-aos="fade-left">
+          <div class="contact-form">
+            <form id="contactForm" action="https://formspree.io/f/xljrlqgy" method="POST" onsubmit="submitContact(event)">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Nama Lengkap</label>
+                  <input type="text" name="nama" class="form-control" required placeholder="Nama kamu">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email</label>
+                  <input type="email" name="email" class="form-control" required placeholder="email@contoh.com">
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Subjek</label>
+                  <select name="subjek" class="form-select" required>
+                    <option value="">Pilih subjek</option>
+                    <option value="Pertanyaan Umum">Pertanyaan Umum</option>
+                    <option value="Saran Fitur">Saran Fitur</option>
+                    <option value="Laporan Bug">Laporan Bug</option>
+                    <option value="Kerjasama">Kerjasama</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Pesan</label>
+                  <textarea name="pesan" class="form-control" rows="5" required placeholder="Tulis pesanmu di sini..."></textarea>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-submit" id="btnKirimPesan">
+                    <i class="bi bi-send me-2"></i> Kirim Pesan
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <h5>
+            <svg width="32" height="32" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+              <circle cx="21" cy="21" r="21" fill="white"/>
+              <path d="M21 10C16.5 10 13 13.5 13 18C13 20.5 14.2 22.7 16 24.1V30H26V24.1C27.8 22.7 29 20.5 29 18C29 13.5 25.5 10 21 10Z" fill="#e31c5f"/>
+              <circle cx="21" cy="17" r="3" fill="white"/>
+            </svg>
+            Dapur Resep
+          </h5>
+          <p class="mb-3">Platform resep makanan interaktif yang membuat memasak lebih mudah, menyenangkan, dan penuh inspirasi setiap hari.</p>
+          <div class="social-links">
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="col-6 col-lg-2">
+          <h5>Navigasi</h5>
+          <a href="#home">Beranda</a>
+          <a href="#resep-terbaru">Resep Terbaru</a>
+          <a href="#resep-populer">Populer</a>
+          <a href="#kategori">Kategori</a>
+        </div>
+        
+        <div class="col-6 col-lg-2">
+          <h5>Informasi</h5>
+          <a href="#tentang">Tentang Kami</a>
+          <a href="#faq">FAQ</a>
+          <a href="#kontak">Kontak</a>
+          <a href="#cari">Cari Resep</a>
+        </div>
+        
+        <div class="col-lg-4">
+          <h5>Newsletter</h5>
+          <p>Dapatkan inspirasi resep mingguan langsung di emailmu.</p>
+          <div class="input-group">
+            <input type="email" class="form-control" placeholder="Email kamu" style="border-radius: 50px 0 0 50px; border: none;">
+            <button class="btn btn-hero-primary" style="border-radius: 0 50px 50px 0;" type="button">
+              <i class="bi bi-send"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="mb-0">&copy; 2026 Dapur Resep. Dibangun dengan ❤️ menggunakan Bootstrap & TheMealDB API.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- ========== RECIPE DETAIL PAGE ========== -->
+  <section id="recipe-detail" class="recipe-detail-section">
+    <div class="container" id="recipeDetailContent">
+      <!-- Content loaded by JS -->
+    </div>
+  </section>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100
+    });
+    
+    const API_BASE = 'https://www.themealdb.com/api/json/v1/1';
+    
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('mainNavbar');
+      const backToTop = document.getElementById('backToTop');
+      
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      if (window.scrollY > 400) {
+        backToTop.classList.add('show');
+      } else {
+        backToTop.classList.remove('show');
+      }
+    });
+    
+    // Parallax effect on hero
+    window.addEventListener('scroll', () => {
+      const parallax = document.querySelector('.parallax-bg');
+      if (parallax) {
+        const scrolled = window.pageYOffset;
+        parallax.style.transform = `translateY(${scrolled * 0.3}px)`;
+      }
+    });
+    
+    // Create recipe card HTML (for Latest section)
+    function createRecipeCard(meal) {
+      return `
+        <div class="col-sm-6 col-lg-4 col-xl-3" data-aos="fade-up">
+          <div class="recipe-card" onclick="showRecipeDetail('${meal.idMeal}')">
+            <div class="card-img-wrapper">
+              <span class="category-badge">${meal.strCategory || 'Resep'}</span>
+              <img src="${meal.strMealThumb}" alt="${meal.strMeal}" loading="lazy">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">${meal.strMeal}</h5>
+              <div class="card-meta">
+                <span><i class="bi bi-geo-alt"></i> ${meal.strArea || 'Internasional'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Create popular card (Dapur Umami style)
+    function createPopularCard(meal) {
+      // Fake realistic stats for visual match
+      const rating = (4.5 + Math.random() * 0.5).toFixed(2);
+      const likes = Math.floor(300 + Math.random() * 700);
+      const times = [25, 30, 40, 45, 60, 90];
+      const time = times[Math.floor(Math.random() * times.length)];
+
+      return `
+        <div class="col-6 col-md-4 col-lg" data-aos="fade-up">
+          <div class="pop-card" onclick="showRecipeDetail('${meal.idMeal}')">
+            <div class="pop-img-wrap">
+              <img src="${meal.strMealThumb}" alt="${meal.strMeal}" loading="lazy">
+              <span class="teruji-badge"><i class="bi bi-patch-check-fill"></i> TERUJI</span>
+            </div>
+            <div class="pop-body">
+              <h6 class="pop-title">${meal.strMeal}</h6>
+              <div class="pop-official">
+                <svg width="18" height="18" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="21" fill="#e31c5f"/><path d="M21 12C17.5 12 14.5 15 14.5 18.5C14.5 20.5 15.5 22.3 17 23.5V28H25V23.5C26.5 22.3 27.5 20.5 27.5 18.5C27.5 15 24.5 12 21 12Z" fill="white"/><circle cx="21" cy="17.5" r="2.5" fill="#e31c5f"/></svg>
+                Official Resep
+              </div>
+              <div class="pop-meta">
+                <span class="star"><i class="bi bi-star-fill"></i> ${rating}</span>
+                <span class="heart"><i class="bi bi-heart-fill"></i> ${likes}</span>
+                <span class="time"><i class="bi bi-clock"></i> ${time}m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Fetch multiple random meals
+    async function fetchRandomMeals(count = 8) {
+      const promises = Array.from({ length: count }, () => 
+        fetch(`${API_BASE}/random.php`).then(r => r.json())
+      );
+      const results = await Promise.all(promises);
+      return results.map(r => r.meals[0]).filter(Boolean);
+    }
+    
+    // Load Latest Recipes
+    async function loadLatestRecipes() {
+      const container = document.getElementById('latestRecipes');
+      try {
+        const meals = await fetchRandomMeals(8);
+        container.innerHTML = meals.map(createRecipeCard).join('');
+        AOS.refresh();
+      } catch (err) {
+        container.innerHTML = `<div class="col-12 text-center text-muted">Gagal memuat resep. Silakan refresh halaman.</div>`;
+      }
+    }
+    
+    // Load more latest
+    async function loadMoreLatest() {
+      const container = document.getElementById('latestRecipes');
+      const meals = await fetchRandomMeals(4);
+      container.insertAdjacentHTML('beforeend', meals.map(createRecipeCard).join(''));
+      AOS.refresh();
+    }
+    
+    // Load Popular Recipes (Umami style)
+    async function loadPopularRecipes() {
+      const container = document.getElementById('popularRecipes');
+      try {
+        const categories = ['Chicken', 'Beef', 'Dessert', 'Seafood', 'Pasta'];
+        const promises = categories.map(cat => 
+          fetch(`${API_BASE}/filter.php?c=${cat}`).then(r => r.json())
+        );
+        const results = await Promise.all(promises);
+        
+        let meals = [];
+        results.forEach(res => {
+          if (res.meals) {
+            meals = meals.concat(res.meals.slice(0, 2));
+          }
+        });
+        
+        // Shuffle and take 5
+        meals = meals.sort(() => 0.5 - Math.random()).slice(0, 5);
+        
+        const detailed = await Promise.all(
+          meals.map(m => 
+            fetch(`${API_BASE}/lookup.php?i=${m.idMeal}`).then(r => r.json()).then(d => d.meals[0])
+          )
+        );
+        
+        container.innerHTML = detailed.filter(Boolean).map(createPopularCard).join('');
+        AOS.refresh();
+      } catch (err) {
+        container.innerHTML = `<div class="col-12 text-center text-muted">Gagal memuat resep populer.</div>`;
+      }
+    }
+
+    // Tab switch for popular section
+    function switchPopularTab(type) {
+      document.getElementById('tabOfficial').classList.toggle('active', type === 'official');
+      document.getElementById('tabMember').classList.toggle('active', type === 'member');
+      loadPopularRecipes(); // reload with same data for demo
+    }
+
+    // Show / Hide Resep Pilihan page
+    function showResepPilihan() {
+      document.body.classList.add('pilihan-active');
+      const section = document.getElementById('resep-pilihan');
+      section.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Re-init carousel in case
+      setTimeout(() => {
+        renderPilihanCarousel();
+        initPilihanCarousel();
+      }, 100);
+    }
+
+    function hideResepPilihan() {
+      document.body.classList.remove('pilihan-active');
+      document.getElementById('resep-pilihan').classList.remove('show');
+      // Kembali ke bagian Resep Populer
+      const target = document.getElementById('resep-populer');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function goHome() {
+      if (document.body.classList.contains('pilihan-active')) {
+        hideResepPilihan();
+      }
+      if (document.body.classList.contains('detail-active')) {
+        hideRecipeDetail();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ========== RESEP PILIHAN CAROUSEL ==========
+    const pilihanData = [
+      {
+        title: "Tumis Sayur Favorit Keluarga",
+        count: 15,
+        img: "https://www.themealdb.com/images/media/meals/wxywrq1468235067.jpg"
+      },
+      {
+        title: "Mampir Dapur Shireen Sungkar",
+        count: 3,
+        img: "https://www.themealdb.com/images/media/meals/1520084413.jpg"
+      },
+      {
+        title: "Mampir Dapur Mami Abe",
+        count: 3,
+        img: "https://www.themealdb.com/images/media/meals/1529446352.jpg"
+      },
+      {
+        title: "Mampir Dapur Ramadan",
+        count: 3,
+        img: "https://www.themealdb.com/images/media/meals/xxrqxy1511794809.jpg"
+      },
+      {
+        title: "Resep Ayam Favorit",
+        count: 12,
+        img: "https://www.themealdb.com/images/media/meals/ysxwuq1488236933.jpg"
+      },
+      {
+        title: "Dessert Manis Spesial",
+        count: 8,
+        img: "https://www.themealdb.com/images/media/meals/rpvptu1511640962.jpg"
+      },
+      {
+        title: "Seafood Segar Hari Ini",
+        count: 6,
+        img: "https://www.themealdb.com/images/media/meals/tvtxpq1511464705.jpg"
+      }
+    ];
+
+    function renderPilihanCarousel() {
+      const track = document.getElementById('pilihanCarousel');
+      const dotsContainer = document.getElementById('pilihanDots');
+      if (!track) return;
+
+      track.innerHTML = pilihanData.map((item, i) => `
+        <div class="pilihan-card" data-index="${i}" onclick="document.getElementById('kategori').scrollIntoView({behavior:'smooth'})">
+          <img src="${item.img}" alt="${item.title}" loading="lazy">
+          <div class="pilihan-overlay">
+            <h4 class="pilihan-card-title">${item.title}</h4>
+            <span class="resep-count">${item.count} Resep</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Dots (one per card group of ~3)
+      const totalDots = Math.ceil(pilihanData.length / 2);
+      dotsContainer.innerHTML = Array.from({length: totalDots}, (_, i) => 
+        `<button class="dot ${i === 0 ? 'active' : ''}" data-dot="${i}" aria-label="Slide ${i+1}"></button>`
+      ).join('');
+
+      // Dot click
+      dotsContainer.querySelectorAll('.dot').forEach(dot => {
+        dot.addEventListener('click', () => {
+          const idx = parseInt(dot.dataset.dot);
+          const cardWidth = track.querySelector('.pilihan-card').offsetWidth + 20;
+          track.scrollTo({ left: idx * cardWidth * 2, behavior: 'smooth' });
+          updateDots(idx);
+        });
+      });
+    }
+
+    function updateDots(activeIdx) {
+      document.querySelectorAll('#pilihanDots .dot').forEach((d, i) => {
+        d.classList.toggle('active', i === activeIdx);
+      });
+    }
+
+    // Carousel navigation & auto-slide
+    let autoSlideInterval;
+    function initPilihanCarousel() {
+      const track = document.getElementById('pilihanCarousel');
+      const prevBtn = document.getElementById('carouselPrev');
+      const nextBtn = document.getElementById('carouselNext');
+      if (!track) return;
+
+      const scrollAmount = () => {
+        const card = track.querySelector('.pilihan-card');
+        return card ? card.offsetWidth + 20 : 300;
+      };
+
+      prevBtn?.addEventListener('click', () => {
+        track.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+      });
+
+      nextBtn?.addEventListener('click', () => {
+        track.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+      });
+
+      // Update dots on scroll
+      track.addEventListener('scroll', () => {
+        const cardWidth = scrollAmount();
+        const idx = Math.round(track.scrollLeft / (cardWidth * 2));
+        updateDots(Math.min(idx, document.querySelectorAll('#pilihanDots .dot').length - 1));
+      });
+
+      // Auto slide
+      function startAutoSlide() {
+        autoSlideInterval = setInterval(() => {
+          const maxScroll = track.scrollWidth - track.clientWidth;
+          if (track.scrollLeft >= maxScroll - 10) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            track.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+          }
+        }, 3500);
+      }
+
+      startAutoSlide();
+
+      // Pause on hover
+      track.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+      track.addEventListener('mouseleave', startAutoSlide);
+    }
+    
+    // Load Categories
+    async function loadCategories() {
+      const container = document.getElementById('categoryList');
+      try {
+        const res = await fetch(`${API_BASE}/categories.php`);
+        const data = await res.json();
+        
+        const icons = {
+          'Beef': 'bi-basket-fill',
+          'Chicken': 'bi-egg-fried',
+          'Dessert': 'bi-cake',
+          'Lamb': 'bi-award-fill',
+          'Miscellaneous': 'bi-stars',
+          'Pasta': 'bi-bezier2',
+          'Pork': 'bi-circle-fill',
+          'Seafood': 'bi-water',
+          'Side': 'bi-cup-hot-fill',
+          'Starter': 'bi-flower1',
+          'Vegan': 'bi-flower2',
+          'Vegetarian': 'bi-tree-fill',
+          'Breakfast': 'bi-brightness-alt-high-fill',
+          'Goat': 'bi-emoji-smile-fill'
+        };
+        
+        container.innerHTML = data.categories.map(cat => `
+          <div class="col-6 col-md-4 col-lg-3 col-xl-2" data-aos="zoom-in">
+            <div class="category-card" onclick="filterByCategory('${cat.strCategory}', this)">
+              <div class="cat-icon">
+                <i class="bi ${icons[cat.strCategory] || 'bi-egg'}"></i>
+              </div>
+              <h6>${cat.strCategory}</h6>
+            </div>
+          </div>
+        `).join('');
+        
+        AOS.refresh();
+      } catch (err) {
+        container.innerHTML = `<div class="col-12 text-center">Gagal memuat kategori.</div>`;
+      }
+    }
+    
+    // Filter by category
+    async function filterByCategory(category, el) {
+      // Update active state
+      document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      
+      const container = document.getElementById('filteredRecipes');
+      container.innerHTML = `<div class="col-12 spinner-wrapper"><div class="spinner-border"></div></div>`;
+      
+      try {
+        const res = await fetch(`${API_BASE}/filter.php?c=${category}`);
+        const data = await res.json();
+        
+        if (!data.meals) {
+          container.innerHTML = `<div class="col-12 text-center text-muted">Tidak ada resep di kategori ini.</div>`;
+          return;
+        }
+        
+        // Get full details for first 8
+        const detailed = await Promise.all(
+          data.meals.slice(0, 8).map(m => 
+            fetch(`${API_BASE}/lookup.php?i=${m.idMeal}`).then(r => r.json()).then(d => d.meals[0])
+          )
+        );
+        
+        container.innerHTML = `
+          <div class="col-12 mb-3">
+            <h4 class="fw-bold">Resep ${category} <span class="badge bg-primary">${data.meals.length}</span></h4>
+          </div>
+          ${detailed.filter(Boolean).map(createRecipeCard).join('')}
+        `;
+        AOS.refresh();
+        
+        // Scroll to results
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        container.innerHTML = `<div class="col-12 text-center text-muted">Gagal memuat resep.</div>`;
+      }
+    }
+    
+    // Search
+    async function performSearch() {
+      const query = document.getElementById('mainSearch').value.trim();
+      const container = document.getElementById('searchResults');
+      
+      if (!query) {
+        container.innerHTML = `<div class="col-12 text-center text-white">Masukkan kata kunci pencarian.</div>`;
+        return;
+      }
+      
+      container.innerHTML = `<div class="col-12 spinner-wrapper"><div class="spinner-border text-white"></div></div>`;
+      
+      try {
+        const res = await fetch(`${API_BASE}/search.php?s=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        
+        if (!data.meals) {
+          container.innerHTML = `<div class="col-12 text-center text-white">Tidak ditemukan resep untuk "${query}".</div>`;
+          return;
+        }
+        
+        container.innerHTML = `
+          <div class="col-12 mb-3 text-center">
+            <h4 class="text-white">Hasil pencarian: "${query}" <span class="badge bg-light text-dark">${data.meals.length}</span></h4>
+          </div>
+          ${data.meals.map(createRecipeCard).join('')}
+        `;
+        AOS.refresh();
+      } catch (err) {
+        container.innerHTML = `<div class="col-12 text-center text-white">Terjadi kesalahan saat mencari.</div>`;
+      }
+    }
+    
+    // Nav search enter key
+    // Autocomplete saat mengetik
+    let suggestTimer = null;
+    async function fetchSuggestions(query, containerId) {
+      const box = document.getElementById(containerId);
+      if (!box) return;
+      if (!query || query.length < 2) {
+        box.classList.remove('show');
+        box.innerHTML = '';
+        return;
+      }
+      box.classList.add('show');
+      box.innerHTML = `<div class="suggest-loading"><span class="spinner-border spinner-border-sm me-2"></span>Mencari...</div>`;
+      try {
+        const res = await fetch(`${API_BASE}/search.php?s=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        if (!data.meals || !data.meals.length) {
+          box.innerHTML = `<div class="suggest-empty">Tidak ada resep untuk "${query}"</div>`;
+          return;
+        }
+        const list = data.meals.slice(0, 6);
+        box.innerHTML = list.map(m => `
+          <div class="suggest-item" data-id="${m.idMeal}" data-name="${m.strMeal.replace(/"/g, '&quot;')}">
+            <img src="${m.strMealThumb}" alt="${m.strMeal}">
+            <div class="suggest-info">
+              <div class="suggest-name">${m.strMeal}</div>
+              <div class="suggest-cat">${m.strCategory || ''} · ${m.strArea || ''}</div>
+            </div>
+          </div>
+        `).join('');
+        box.querySelectorAll('.suggest-item').forEach(item => {
+          item.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const id = item.dataset.id;
+            box.classList.remove('show');
+            showRecipeDetail(id);
+          });
+        });
+      } catch (err) {
+        box.innerHTML = `<div class="suggest-empty">Gagal memuat saran</div>`;
+      }
+    }
+
+    function bindSearchSuggest(inputId, suggestId) {
+      const input = document.getElementById(inputId);
+      const box = document.getElementById(suggestId);
+      if (!input || !box) return;
+
+      input.addEventListener('input', () => {
+        clearTimeout(suggestTimer);
+        const q = input.value.trim();
+        suggestTimer = setTimeout(() => fetchSuggestions(q, suggestId), 350);
+      });
+
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          box.classList.remove('show');
+          performSearch();
+        }
+      });
+
+      input.addEventListener('focus', () => {
+        if (box.innerHTML && input.value.trim().length >= 2) box.classList.add('show');
+      });
+
+      input.addEventListener('blur', () => {
+        setTimeout(() => box.classList.remove('show'), 180);
+      });
+    }
+
+    bindSearchSuggest('mainSearch', 'mainSuggest');
+
+    // Tutup saran saat klik di luar
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#mainSearch') && !e.target.closest('#mainSuggest')) {
+        document.getElementById('mainSuggest')?.classList.remove('show');
+      }
+    });
+    
+    // Show recipe detail
+    async function showRecipeDetail(id) {
+      // Keluar dari mode pilihan jika aktif
+      document.body.classList.remove('pilihan-active');
+      const pilihanSec = document.getElementById('resep-pilihan');
+      if (pilihanSec) pilihanSec.classList.remove('show');
+
+      const section = document.getElementById('recipe-detail');
+      const content = document.getElementById('recipeDetailContent');
+      
+      content.innerHTML = `<div class="text-center py-5"><div class="spinner-border text-danger" style="width:3rem;height:3rem;"></div></div>`;
+      document.body.classList.add('detail-active');
+      section.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      try {
+        const res = await fetch(`${API_BASE}/lookup.php?i=${id}`);
+        const data = await res.json();
+        const meal = data.meals[0];
+        
+        // Collect ingredients
+        let ingredients = [];
+        for (let i = 1; i <= 20; i++) {
+          const ing = meal[`strIngredient${i}`];
+          const measure = meal[`strMeasure${i}`];
+          if (ing && ing.trim()) {
+            ingredients.push(`${measure || ''} ${ing}`.trim());
+          }
+        }
+        
+        // Instructions
+        const instructions = meal.strInstructions
+          .split(/\r?\n|\. /)
+          .map(s => s.trim())
+          .filter(line => line.length > 10);
+
+        // Fake nutrition for visual match
+        const kalori = (200 + Math.random() * 150).toFixed(1);
+        const protein = (8 + Math.random() * 20).toFixed(1);
+        const karbo = (15 + Math.random() * 40).toFixed(1);
+        const lemak = (5 + Math.random() * 25).toFixed(1);
+        const serat = (1 + Math.random() * 5).toFixed(1);
+        const rating = (4.5 + Math.random() * 0.5).toFixed(2);
+        const times = [20, 25, 30, 35, 40, 45, 60];
+        const time = times[Math.floor(Math.random() * times.length)];
+        const porsi = [2, 3, 4, 5, 6][Math.floor(Math.random() * 5)];
+        
+        const tentangText = meal.strInstructions.length > 200 
+          ? meal.strInstructions.substring(0, 400) + '...'
+          : meal.strInstructions;
+
+        // High quality image (larger size from TheMealDB)
+        const imgSrc = meal.strMealThumb ? meal.strMealThumb.replace('/preview', '') : meal.strMealThumb;
+        
+        content.innerHTML = `
+          <!-- Breadcrumb -->
+          <nav class="detail-breadcrumb" aria-label="breadcrumb">
+            <a href="javascript:void(0)" onclick="hideRecipeDetail()"><i class="bi bi-house-door"></i></a>
+            <span class="mx-1">›</span>
+            <a href="javascript:void(0)" onclick="hideRecipeDetail()">Resep</a>
+            <span class="mx-1">›</span>
+            <span class="current">${meal.strMeal}</span>
+          </nav>
+
+          <!-- Title -->
+          <h1 class="detail-title">${meal.strMeal}</h1>
+
+          <!-- Image -->
+          <div class="detail-image-wrap">
+            <img src="${imgSrc}" alt="${meal.strMeal}" loading="eager">
+            <div class="teruji-stamp">
+              <span>TERUJI<br>UMAMI</span>
+            </div>
+            <button class="heart-btn" id="loveBtn" onclick="toggleLove(this)" title="Suka resep ini">
+              <i class="bi bi-heart"></i>
+            </button>
+          </div>
+
+          <!-- Rating -->
+          <div class="detail-rating-row">
+            <span class="stars" id="starRating" data-rating="0">
+              <i class="bi bi-star" data-value="1"></i>
+              <i class="bi bi-star" data-value="2"></i>
+              <i class="bi bi-star" data-value="3"></i>
+              <i class="bi bi-star" data-value="4"></i>
+              <i class="bi bi-star" data-value="5"></i>
+            </span>
+            <span class="rating-num" id="ratingNum">${rating}</span>
+            <button class="share-btn" onclick="shareRecipe('${meal.strMeal.replace(/'/g, "\\'")}', '${imgSrc}')" title="Bagikan resep">
+              <i class="bi bi-share"></i>
+            </button>
+          </div>
+
+          <!-- Time & Servings -->
+          <div class="detail-meta-row">
+            <span><i class="bi bi-clock"></i> ${time} Menit</span>
+            <span><i class="bi bi-people"></i> ${porsi} Porsi</span>
+          </div>
+
+          <!-- Nutrition -->
+          <div class="nutrition-row">
+            <div class="nutrition-item">
+              <div class="n-icon" style="background:#ff7043;"><i class="bi bi-fire"></i></div>
+              <div class="n-label">Kalori</div>
+              <div class="n-value">${kalori} Kkal</div>
+            </div>
+            <div class="nutrition-item">
+              <div class="n-icon" style="background:#ab47bc;"><i class="bi bi-egg-fried"></i></div>
+              <div class="n-label">Protein</div>
+              <div class="n-value">${protein} gram</div>
+            </div>
+            <div class="nutrition-item">
+              <div class="n-icon" style="background:#a1887f;"><i class="bi bi-cup-hot"></i></div>
+              <div class="n-label">Karbo</div>
+              <div class="n-value">${karbo} gram</div>
+            </div>
+            <div class="nutrition-item">
+              <div class="n-icon" style="background:#ffca28;"><i class="bi bi-droplet-fill"></i></div>
+              <div class="n-label">Lemak</div>
+              <div class="n-value">${lemak} gram</div>
+            </div>
+            <div class="nutrition-item">
+              <div class="n-icon" style="background:#66bb6a;"><i class="bi bi-flower1"></i></div>
+              <div class="n-label">Serat</div>
+              <div class="n-value">${serat} gram</div>
+            </div>
+          </div>
+          <p class="nutrition-note">Kandungan tiap satu porsi</p>
+
+          <!-- Tentang Masakan -->
+          <div class="tentang-section">
+            <h3>Tentang Masakan</h3>
+            <p>${tentangText.replace(/\n/g, '</p><p>')}</p>
+            <p>Resep <strong>${meal.strMeal}</strong> ini berasal dari kategori <strong>${meal.strCategory}</strong> (${meal.strArea}). Praktis, lezat, dan cocok untuk disajikan kapan saja. Yuk, coba di rumah!</p>
+          </div>
+
+          <!-- Bahan-Bahan -->
+          <h3 class="detail-section-title">Bahan-Bahan</h3>
+          <div class="bahan-grid">
+            ${ingredients.map(ing => `
+              <div class="bahan-item">
+                <i class="bi bi-circle-fill"></i>
+                <span>${ing}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- Cara Memasak -->
+          <h3 class="detail-section-title">Cara Memasak</h3>
+          <ol class="langkah-list">
+            ${instructions.map(step => `<li>${step}</li>`).join('')}
+          </ol>
+
+          ${meal.strYoutube ? `
+            <div class="text-center mt-4 mb-3">
+              <a href="${meal.strYoutube}" target="_blank" class="btn btn-hero-primary">
+                <i class="bi bi-youtube me-2"></i> Tonton Video Tutorial
+              </a>
+            </div>
+          ` : ''}
+        `;
+
+        // Aktifkan rating bintang interaktif
+        initStarRating();
+      } catch (err) {
+        content.innerHTML = `<div class="text-center text-muted py-5">Gagal memuat detail resep. <a href="javascript:void(0)" onclick="hideRecipeDetail()">Kembali</a></div>`;
+      }
+    }
+
+    function hideRecipeDetail() {
+      document.body.classList.remove('detail-active');
+      document.getElementById('recipe-detail').classList.remove('show');
+      // Kembali ke Resep Populer
+      const target = document.getElementById('resep-populer');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Love / Favorite toggle
+    function toggleLove(btn) {
+      btn.classList.toggle('active');
+      const icon = btn.querySelector('i');
+      if (btn.classList.contains('active')) {
+        icon.className = 'bi bi-heart-fill';
+        // Optional toast
+        showToast('Ditambahkan ke favorit ❤️');
+      } else {
+        icon.className = 'bi bi-heart';
+        showToast('Dihapus dari favorit');
+      }
+    }
+
+    // Interactive star rating
+    function initStarRating() {
+      const container = document.getElementById('starRating');
+      const ratingNum = document.getElementById('ratingNum');
+      if (!container) return;
+
+      const stars = container.querySelectorAll('i');
+      let currentRating = 0;
+
+      stars.forEach(star => {
+        star.addEventListener('mouseenter', () => {
+          const val = parseInt(star.dataset.value);
+          stars.forEach(s => {
+            const v = parseInt(s.dataset.value);
+            s.className = v <= val ? 'bi bi-star-fill filled' : 'bi bi-star';
+          });
+        });
+
+        star.addEventListener('mouseleave', () => {
+          stars.forEach(s => {
+            const v = parseInt(s.dataset.value);
+            s.className = v <= currentRating ? 'bi bi-star-fill filled' : 'bi bi-star';
+          });
+        });
+
+        star.addEventListener('click', () => {
+          currentRating = parseInt(star.dataset.value);
+          container.dataset.rating = currentRating;
+          stars.forEach(s => {
+            const v = parseInt(s.dataset.value);
+            s.className = v <= currentRating ? 'bi bi-star-fill filled' : 'bi bi-star';
+          });
+          if (ratingNum) ratingNum.textContent = currentRating.toFixed(1);
+          showToast(`Kamu memberi ${currentRating} bintang ⭐`);
+        });
+      });
+    }
+
+    // Share recipe
+    async function shareRecipe(title, imageUrl) {
+      const shareData = {
+        title: title + ' - Dapur Resep',
+        text: `Coba resep lezat: ${title} di Dapur Resep!`,
+        url: window.location.href.split('#')[0] + '#resep-populer'
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+          showToast('Berhasil dibagikan!');
+        } catch (err) {
+          if (err.name !== 'AbortError') fallbackShare(shareData);
+        }
+      } else {
+        fallbackShare(shareData);
+      }
+    }
+
+    function fallbackShare(data) {
+      // Copy link to clipboard
+      const text = `${data.title}\n${data.text}\n${data.url}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Link resep disalin ke clipboard!');
+        }).catch(() => {
+          prompt('Salin link resep ini:', data.url);
+        });
+      } else {
+        prompt('Salin link resep ini:', data.url);
+      }
+    }
+
+    // Simple toast notification
+    function showToast(message) {
+      let toast = document.getElementById('appToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'appToast';
+        toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a2e;color:white;padding:12px 24px;border-radius:50px;font-size:0.95rem;font-weight:500;z-index:9999;opacity:0;transition:all 0.35s ease;box-shadow:0 8px 25px rgba(0,0,0,0.25);white-space:nowrap;';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(100px)';
+      }, 2500);
+    }
+    
+    // Contact form
+    async function submitContact(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('btnKirimPesan');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Mengirim...';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          showToast('Pesan berhasil dikirim! Terima kasih 🙏');
+          form.reset();
+        } else {
+          const data = await res.json().catch(() => ({}));
+          showToast(data.error || 'Gagal mengirim pesan. Coba lagi.');
+        }
+      } catch (err) {
+        showToast('Gagal mengirim. Periksa koneksi internet.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+
+    // ========== RESEP HARI INI ==========
+    // Menu sehat khas Indonesia / Jawa
+    const menuPools = {
+      sarapan: [
+        { name: 'Bubur Ayam Kampung Sehat', img: 'https://images.unsplash.com/photo-1589301763310-b9334ac68191?w=600&q=80', kcal: 280, bahan: ['100g beras', '150g ayam kampung', 'Daun bawang', 'Seledri', 'Bawang goreng', 'Kecap & garam secukupnya'], langkah: ['Rebus beras menjadi bubur.', 'Rebus ayam, suwir.', 'Sajikan bubur dengan ayam, daun bawang, seledri, dan bawang goreng.'], tentang: 'Bubur ayam kampung rendah lemak, cocok untuk sarapan bergizi.' },
+        { name: 'Salad Tahu Tempe Sayur', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80', kcal: 220, bahan: ['100g tahu', '100g tempe', 'Selada, timun, tomat', 'Dressing lemon-madu'], langkah: ['Goreng tahu & tempe minimal minyak.', 'Potong sayur.', 'Campur dengan dressing.'], tentang: 'Sarapan tinggi protein nabati khas Indonesia.' },
+        { name: 'Oatmeal Pisang Madu Lokal', img: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=600&q=80', kcal: 250, bahan: ['40g oatmeal', '1 pisang', '1 sdm madu', 'Susu rendah lemak'], langkah: ['Masak oatmeal dengan susu.', 'Tambah pisang dan madu.'], tentang: 'Sarapan serat tinggi dengan bahan lokal.' },
+        { name: 'Lontong Sayur Sehat', img: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80', kcal: 320, bahan: ['Lontong', 'Labu siam', 'Kacang panjang', 'Santan encer', 'Bumbu kuning'], langkah: ['Tumis bumbu.', 'Masak sayur dengan santan encer.', 'Sajikan dengan lontong.'], tentang: 'Sarapan Jawa klasik yang lebih ringan dengan santan encer.' }
+      ],
+      siang: [
+        { name: 'Pecel Sayur dengan Nasi Merah', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80', kcal: 420, bahan: ['Nasi merah 150g', 'Kangkung, tauge, kacang panjang', 'Bumbu pecel kacang', 'Kerupuk singkong'], langkah: ['Kukus sayur.', 'Siapkan bumbu pecel.', 'Sajikan dengan nasi merah.'], tentang: 'Makan siang Jawa kaya serat dan protein nabati.' },
+        { name: 'Sup Ayam Jahe Bening', img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80', kcal: 310, bahan: ['200g ayam', 'Jahe', 'Wortel', 'Kentang', 'Daun bawang', 'Garam'], langkah: ['Rebus ayam dengan jahe.', 'Masukkan wortel dan kentang.', 'Taburi daun bawang.'], tentang: 'Sup ayam jahe menghangatkan dan rendah kalori.' },
+        { name: 'Tumis Kangkung Tempe', img: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80', kcal: 350, bahan: ['1 ikat kangkung', '100g tempe', 'Bawang putih', 'Cabai', 'Nasi merah'], langkah: ['Tumis bawang dan cabai.', 'Masukkan tempe lalu kangkung.', 'Sajikan dengan nasi merah.'], tentang: 'Lauk sederhana, bergizi, khas rumah tangga Jawa.' },
+        { name: 'Ikan Bakar Sambal Matah', img: 'https://images.unsplash.com/photo-1580476262798-bddd9f4b7369?w=600&q=80', kcal: 380, bahan: ['200g ikan kembung', 'Sambal matah', 'Jeruk limau', 'Nasi merah'], langkah: ['Bakar ikan.', 'Buat sambal matah.', 'Sajikan bersama.'], tentang: 'Protein tinggi, lemak sehat dari ikan.' }
+      ],
+      malam: [
+        { name: 'Tumis Tahu Kecambah', img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80', kcal: 260, bahan: ['150g tahu', 'Tauge', 'Bawang putih', 'Kecap asin'], langkah: ['Tumis bawang.', 'Masukkan tahu dan tauge.', 'Bumbui secukupnya.'], tentang: 'Makan malam ringan, mudah dicerna.' },
+        { name: 'Sayur Asem Jawa + Tempe', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80', kcal: 290, bahan: ['Labu', 'Kacang panjang', 'Jagung', 'Asam jawa', 'Tempe goreng'], langkah: ['Rebus sayur dengan asam jawa.', 'Goreng tempe tipis.', 'Sajikan hangat.'], tentang: 'Kuah segar khas Jawa, cocok malam hari.' },
+        { name: 'Capcay Kuah Sayuran', img: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80', kcal: 240, bahan: ['Brokoli', 'Wortel', 'Jamur', 'Bunga kol', 'Bawang putih'], langkah: ['Tumis bawang.', 'Masukkan sayur, tambah sedikit air.', 'Masak hingga matang.'], tentang: 'Makan malam tinggi serat, rendah kalori.' },
+        { name: 'Pepes Tahu Jamur', img: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80', kcal: 270, bahan: ['Tahu', 'Jamur tiram', 'Kemangi', 'Bumbu kuning', 'Daun pisang'], langkah: ['Campur tahu, jamur, bumbu.', 'Bungkus daun pisang.', 'Kukus 30 menit.'], tentang: 'Pepes tanpa minyak berlebih, aroma khas Jawa.' }
+      ]
+    };
+
+    // Set menu lengkap (kombinasi siap pilih)
+    const menuSets = [
+      { id: 'set-1', label: 'Menu Seimbang A', sarapan: 0, siang: 0, malam: 0 },
+      { id: 'set-2', label: 'Menu Seimbang B', sarapan: 1, siang: 1, malam: 1 },
+      { id: 'set-3', label: 'Menu Ringan', sarapan: 2, siang: 2, malam: 2 },
+      { id: 'set-4', label: 'Menu Tradisional', sarapan: 3, siang: 3, malam: 3 },
+      { id: 'set-5', label: 'Acak Sehat', sarapan: -1, siang: -1, malam: -1 }
+    ];
+
+    let currentMenu = { sarapan: null, siang: null, malam: null };
+
+    function pickFromPool(pool, index) {
+      if (index < 0) return pool[Math.floor(Math.random() * pool.length)];
+      return pool[index % pool.length];
+    }
+
+    function setMenuFromSet(setId) {
+      const set = menuSets.find(s => s.id === setId) || menuSets[0];
+      currentMenu = {
+        sarapan: pickFromPool(menuPools.sarapan, set.sarapan),
+        siang: pickFromPool(menuPools.siang, set.siang),
+        malam: pickFromPool(menuPools.malam, set.malam)
+      };
+      renderMenuHariIni();
+      // highlight button
+      document.querySelectorAll('.btn-menu-opt').forEach(b => {
+        b.classList.toggle('active', b.dataset.set === set.id);
+      });
+    }
+
+    function acakMenuHariIni() {
+      currentMenu = {
+        sarapan: pickFromPool(menuPools.sarapan, -1),
+        siang: pickFromPool(menuPools.siang, -1),
+        malam: pickFromPool(menuPools.malam, -1)
+      };
+      renderMenuHariIni();
+      document.querySelectorAll('.btn-menu-opt').forEach(b => b.classList.remove('active'));
+      showToast('Menu hari ini diganti 🍽️');
+    }
+
+    function renderMenuHariIni() {
+      if (!currentMenu.sarapan) setMenuFromSet('set-1');
+      const total = (currentMenu.sarapan.kcal || 0) + (currentMenu.siang.kcal || 0) + (currentMenu.malam.kcal || 0);
+      const badge = document.getElementById('totalKaloriBadge');
+      if (badge) badge.textContent = `Total kalori: ${total.toLocaleString('id-ID')} kkal`;
+
+      const slots = [
+        { key: 'sarapan', label: 'Sarapan', icon: 'bi-brightness-alt-high', cls: 'sarapan' },
+        { key: 'siang', label: 'Siang', icon: 'bi-sun', cls: 'siang' },
+        { key: 'malam', label: 'Malam', icon: 'bi-moon-stars', cls: 'malam' }
+      ];
+
+      const container = document.getElementById('menuHariIniCards');
+      if (!container) return;
+
+      container.innerHTML = slots.map(s => {
+        const item = currentMenu[s.key];
+        return `
+          <div class="col-md-4">
+            <div class="meal-slot-card" onclick="showHariIniMealDetail('${s.key}')">
+              <div class="meal-slot-header ${s.cls}">
+                <i class="bi ${s.icon}"></i> ${s.label}
+              </div>
+              <div class="meal-slot-img">
+                <img src="${item.img}" alt="${item.name}" loading="lazy">
+              </div>
+              <div class="meal-slot-name">
+                ${item.name}
+                <span class="meal-slot-kcal">${item.kcal} kkal</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMenuPilihanBtns() {
+      const el = document.getElementById('menuPilihanBtns');
+      if (!el) return;
+      el.innerHTML = menuSets.map(s => `
+        <button type="button" class="btn-menu-opt" data-set="${s.id}" onclick="setMenuFromSet('${s.id}')">${s.label}</button>
+      `).join('');
+    }
+
+    function showHariIniMealDetail(slotKey) {
+      const item = currentMenu[slotKey];
+      if (!item) return;
+      const labels = { sarapan: 'Sarapan', siang: 'Siang', malam: 'Malam' };
+
+      document.body.classList.remove('pilihan-active');
+      const pilihanSec = document.getElementById('resep-pilihan');
+      if (pilihanSec) pilihanSec.classList.remove('show');
+
+      const section = document.getElementById('recipe-detail');
+      const content = document.getElementById('recipeDetailContent');
+
+      content.innerHTML = `
+        <nav class="detail-breadcrumb">
+          <a href="javascript:void(0)" onclick="hideRecipeDetail()"><i class="bi bi-house-door"></i></a>
+          <span class="mx-1">›</span>
+          <a href="javascript:void(0)" onclick="hideRecipeDetail()">Resep Hari Ini</a>
+          <span class="mx-1">›</span>
+          <span class="current">${item.name}</span>
+        </nav>
+        <h1 class="detail-title">${item.name}</h1>
+        <div class="detail-image-wrap">
+          <img src="${item.img}" alt="${item.name}">
+          <div class="teruji-stamp"><span>SEHAT<br>BERGIZI</span></div>
+          <button class="heart-btn" onclick="toggleLove(this)"><i class="bi bi-heart"></i></button>
+        </div>
+        <div class="detail-meta-row">
+          <span><i class="bi bi-clock"></i> ${labels[slotKey] || ''}</span>
+          <span><i class="bi bi-fire"></i> ${item.kcal} kkal</span>
+        </div>
+        <div class="tentang-section">
+          <h3>Tentang Masakan</h3>
+          <p>${item.tentang}</p>
+          <p>Menu khas Indonesia/Jawa yang dipilih agar sehat, bergizi, dan cocok untuk ${labels[slotKey] || 'hari ini'}.</p>
+        </div>
+        <h3 class="detail-section-title">Bahan-Bahan</h3>
+        <div class="bahan-grid">
+          ${item.bahan.map(b => `<div class="bahan-item"><i class="bi bi-circle-fill"></i><span>${b}</span></div>`).join('')}
+        </div>
+        <h3 class="detail-section-title">Cara Memasak</h3>
+        <ol class="langkah-list">
+          ${item.langkah.map(s => `<li>${s}</li>`).join('')}
+        </ol>
+      `;
+
+      document.body.classList.add('detail-active');
+      section.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showMenuHariIniDetail() {
+      // Tampilkan ringkasan ketiga menu
+      if (!currentMenu.sarapan) return;
+      const total = currentMenu.sarapan.kcal + currentMenu.siang.kcal + currentMenu.malam.kcal;
+      document.body.classList.remove('pilihan-active');
+      const section = document.getElementById('recipe-detail');
+      const content = document.getElementById('recipeDetailContent');
+      content.innerHTML = `
+        <nav class="detail-breadcrumb">
+          <a href="javascript:void(0)" onclick="hideRecipeDetail()"><i class="bi bi-house-door"></i></a>
+          <span class="mx-1">›</span>
+          <span class="current">Resep Hari Ini</span>
+        </nav>
+        <h1 class="detail-title">Menu Hari Ini</h1>
+        <p class="text-center text-muted mb-4">Total kalori: <strong style="color:#7cb342">${total} kkal</strong></p>
+        <div class="row g-3 justify-content-center mb-4">
+          ${['sarapan','siang','malam'].map(k => {
+            const item = currentMenu[k];
+            const label = {sarapan:'Sarapan',siang:'Siang',malam:'Malam'}[k];
+            return `<div class="col-md-4">
+              <div class="meal-slot-card" onclick="showHariIniMealDetail('${k}')">
+                <div class="meal-slot-header ${k}"><i class="bi bi-circle"></i> ${label}</div>
+                <div class="meal-slot-img"><img src="${item.img}" alt="${item.name}"></div>
+                <div class="meal-slot-name">${item.name}<span class="meal-slot-kcal">${item.kcal} kkal</span></div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+        <p class="text-center text-muted">Klik salah satu menu untuk melihat bahan dan cara memasak.</p>
+      `;
+      document.body.classList.add('detail-active');
+      section.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadLatestRecipes();
+      loadPopularRecipes();
+      loadCategories();
+      renderPilihanCarousel();
+      initPilihanCarousel();
+      renderMenuPilihanBtns();
+      setMenuFromSet('set-1');
+
+      // Saat klik menu navbar, keluar dari mode khusus
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          if (document.body.classList.contains('pilihan-active')) {
+            document.body.classList.remove('pilihan-active');
+            document.getElementById('resep-pilihan').classList.remove('show');
+          }
+          if (document.body.classList.contains('detail-active')) {
+            document.body.classList.remove('detail-active');
+            document.getElementById('recipe-detail').classList.remove('show');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
