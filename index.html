@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dapur Resep - Temukan Resep Favoritmu</title>
+  <title>COOKLY - Temukan Resep Favoritmu</title>
   <meta name="description" content="Landing page resep makanan interaktif dengan data real-time dari API. Temukan resep terbaru, populer, dan filter berdasarkan kategori.">
   
   <!-- Bootstrap 5 CSS -->
@@ -33,10 +33,18 @@
       box-sizing: border-box;
     }
     
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       overflow-x: hidden;
-      scroll-behavior: smooth;
+    }
+
+    section[id] {
+      scroll-margin-top: 90px;
     }
     
     /* ========== NAVBAR ========== */
@@ -82,11 +90,11 @@
     .nav-link:hover, .nav-link.active {
       color: white !important;
     }
-    
+
     .nav-link::after {
       content: '';
       position: absolute;
-      bottom: 0;
+      bottom: 2px;
       left: 50%;
       width: 0;
       height: 2px;
@@ -97,6 +105,10 @@
     
     .nav-link:hover::after, .nav-link.active::after {
       width: 60%;
+    }
+
+    .nav-link.active {
+      font-weight: 700;
     }
     
     .search-box {
@@ -150,6 +162,174 @@
       background: white;
       color: var(--primary);
       transform: translateY(-2px);
+    }
+
+    /* ========== AUTH MODAL ========== */
+    .auth-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 100000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .auth-overlay.show {
+      display: flex;
+    }
+
+    .auth-modal {
+      background: white;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      overflow: hidden;
+      animation: authPop 0.3s ease;
+    }
+
+    @keyframes authPop {
+      from { transform: scale(0.92) translateY(12px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .auth-header {
+      background: linear-gradient(135deg, var(--primary), #ff2d6f);
+      color: white;
+      padding: 1.4rem 1.5rem 1.2rem;
+      position: relative;
+    }
+
+    .auth-header h3 {
+      margin: 0;
+      font-weight: 800;
+      font-size: 1.35rem;
+    }
+
+    .auth-header p {
+      margin: 0.25rem 0 0;
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .auth-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+    }
+
+    .auth-tabs button {
+      flex: 1;
+      border: none;
+      background: #fafafa;
+      padding: 0.85rem;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .auth-tabs button.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: inset 0 -3px 0 var(--primary);
+    }
+
+    .auth-body {
+      padding: 1.5rem;
+    }
+
+    .auth-body .form-control {
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid #e8e8e8;
+    }
+
+    .auth-body .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(227, 28, 95, 0.15);
+    }
+
+    .auth-body .btn-auth-submit {
+      width: 100%;
+      border: none;
+      border-radius: 50px;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, var(--primary), #ff2d6f);
+      color: white;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .auth-body .btn-auth-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(227, 28, 95, 0.3);
+    }
+
+    .auth-msg {
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      text-align: center;
+      min-height: 1.2em;
+    }
+
+    .auth-msg.error { color: #e53935; }
+    .auth-msg.success { color: #43a047; }
+
+    .user-chip {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50px;
+      padding: 0.3rem 0.75rem 0.3rem 0.35rem;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .user-chip.show { display: inline-flex; }
+
+    .user-chip .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: white;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    .user-chip .btn-logout {
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 0.25rem;
     }
     
     /* ========== HERO ========== */
@@ -867,6 +1047,7 @@
     body.pilihan-active #resep-hari-ini,
     body.pilihan-active #kategori,
     body.pilihan-active #cari,
+    body.pilihan-active #tulis-resep,
     body.pilihan-active #tentang,
     body.pilihan-active #faq,
     body.pilihan-active #kontak,
@@ -882,6 +1063,7 @@
     body.detail-active #resep-pilihan,
     body.detail-active #kategori,
     body.detail-active #cari,
+    body.detail-active #tulis-resep,
     body.detail-active #tentang,
     body.detail-active #faq,
     body.detail-active #kontak,
@@ -1219,6 +1401,95 @@
       font-weight: 700;
     }
 
+    /* Survei resep */
+    .survey-box {
+      max-width: 520px;
+      margin: 2.5rem auto 1rem;
+      background: linear-gradient(135deg, #fff5f7, #fff);
+      border: 1px solid #f8bbd0;
+      border-radius: 20px;
+      padding: 1.5rem 1.75rem;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(227, 28, 95, 0.08);
+    }
+
+    .survey-box h4 {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #1a1a2e;
+      margin-bottom: 0.35rem;
+    }
+
+    .survey-box .survey-sub {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .survey-pct {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #7cb342;
+      margin-bottom: 0.25rem;
+    }
+
+    .survey-pct span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .survey-btns {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .survey-btns button {
+      border-radius: 50px;
+      padding: 0.55rem 1.4rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .survey-btns .btn-yes {
+      background: #7cb342;
+      color: white;
+    }
+
+    .survey-btns .btn-yes:hover {
+      background: #689f38;
+      transform: translateY(-2px);
+    }
+
+    .survey-btns .btn-no {
+      background: white;
+      color: #666;
+      border: 1.5px solid #ddd;
+    }
+
+    .survey-btns .btn-no:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .survey-btns button:disabled {
+      opacity: 0.7;
+      cursor: default;
+      transform: none !important;
+    }
+
+    .survey-thanks {
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+    }
+
     .pilihan-section .breadcrumb {
       font-size: 0.9rem;
     }
@@ -1466,6 +1737,67 @@
       border-radius: 50%;
     }
     
+    /* ========== TULIS RESEP ========== */
+    .tulis-section {
+      padding: 80px 0;
+      background: var(--light-bg, #faf7f8);
+    }
+
+    .tulis-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+      border: 1px solid rgba(227,28,95,0.08);
+    }
+
+    .tulis-card .form-control,
+    .tulis-card .form-select {
+      border-radius: 12px;
+      border: 1.5px solid #eee;
+      padding: 0.65rem 1rem;
+    }
+
+    .tulis-card .form-control:focus,
+    .tulis-card .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(227,28,95,0.12);
+    }
+
+    .recipe-card .user-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 50px;
+      z-index: 2;
+    }
+
+    .recipe-card .btn-del-recipe {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      border: none;
+      background: rgba(0,0,0,0.55);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .recipe-card .btn-del-recipe:hover {
+      background: #e53935;
+    }
+
     .search-box-lg {
       background: white;
       border-radius: 60px;
@@ -1934,22 +2266,28 @@
     }
   </style>
 </head>
-<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="100">
+<body>
 
   <!-- ========== NAVBAR ========== -->
   <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
     <div class="container">
-      <a class="navbar-brand" href="javascript:void(0)" onclick="goHome()">
-        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="21" cy="21" r="21" fill="white"/>
-          <path d="M21 10C16.5 10 13 13.5 13 18C13 20.5 14.2 22.7 16 24.1V30H26V24.1C27.8 22.7 29 20.5 29 18C29 13.5 25.5 10 21 10Z" fill="#e31c5f"/>
-          <circle cx="21" cy="17" r="3" fill="white"/>
-          <rect x="17" y="28" width="8" height="2" rx="1" fill="#e31c5f"/>
+      <a class="navbar-brand" href="#home" id="brandHome">
+        <!-- Logo masak: chef hat + pan -->
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="COOKLY">
+          <circle cx="22" cy="22" r="22" fill="white"/>
+          <!-- top hat -->
+          <path d="M14 18c0-5 3.5-9 8-9s8 4 8 9H14z" fill="#e31c5f"/>
+          <rect x="12" y="17" width="20" height="3.5" rx="1.5" fill="#e31c5f"/>
+          <!-- pan -->
+          <ellipse cx="22" cy="30" rx="10" ry="4" fill="#e31c5f"/>
+          <rect x="30" y="28.5" width="7" height="2.5" rx="1" fill="#e31c5f"/>
+          <!-- steam -->
+          <path d="M18 24c0-2 1-3 1.5-4M22 23c0-2.5 1-4 1.5-5M26 24c0-2 1-3 1.5-4" stroke="#e31c5f" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
         </svg>
-        <span>Dapur Resep</span>
+        <span>COOKLY</span>
       </a>
       
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <i class="bi bi-list text-white fs-3"></i>
       </button>
       
@@ -1958,6 +2296,7 @@
           <li class="nav-item"><a class="nav-link active" href="#home">Beranda</a></li>
           <li class="nav-item"><a class="nav-link" href="#resep-terbaru">Resep Terbaru</a></li>
           <li class="nav-item"><a class="nav-link" href="#resep-populer">Populer</a></li>
+          <li class="nav-item"><a class="nav-link" href="#resep-hari-ini">Hari Ini</a></li>
           <li class="nav-item"><a class="nav-link" href="#kategori">Kategori</a></li>
           <li class="nav-item"><a class="nav-link" href="#cari">Cari</a></li>
           <li class="nav-item"><a class="nav-link" href="#tentang">Tentang</a></li>
@@ -1966,9 +2305,17 @@
         </ul>
         
         <div class="d-flex align-items-center gap-2">
-          <a href="#kontak" class="btn btn-nav btn-login d-none d-md-inline-block">
+          <a href="javascript:void(0)" class="btn btn-nav btn-belanja" id="btnTulisResepNav" onclick="goTulisResep()">
+            <i class="bi bi-pencil-square me-1"></i> Tulis Resep
+          </a>
+          <a href="javascript:void(0)" class="btn btn-nav btn-login" id="btnOpenAuth" onclick="openAuthModal('login')">
             Login / Daftar
           </a>
+          <div class="user-chip" id="userChip">
+            <span class="avatar" id="userAvatar">U</span>
+            <span id="userNameLabel">User</span>
+            <button type="button" class="btn-logout" onclick="logoutUser()">Keluar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2076,7 +2423,7 @@
       <div class="d-flex flex-wrap justify-content-between align-items-end mb-4" data-aos="fade-up">
         <div>
           <h2 class="popular-title mb-2">Resep Populer</h2>
-          <p class="popular-subtitle mb-0">Resep yang paling banyak dikunjungi oleh para member Dapur Resep.</p>
+          <p class="popular-subtitle mb-0">Resep yang paling banyak dikunjungi oleh para member COOKLY.</p>
         </div>
         <a href="javascript:void(0)" class="lihat-lainnya" onclick="showResepPilihan()">Lihat lainnya <i class="bi bi-chevron-right"></i></a>
       </div>
@@ -2184,6 +2531,7 @@
   </section>
 
   <!-- ========== SEARCH ========== -->
+  <!-- ========== TULIS RESEP ========== -->
   <section id="cari" class="search-section">
     <div class="container position-relative" data-aos="fade-up">
       <div class="text-center mb-4">
@@ -2193,7 +2541,7 @@
       
       <div class="search-box-lg position-relative">
         <i class="bi bi-search ms-3 text-muted fs-5"></i>
-        <input type="text" id="mainSearch" placeholder="Contoh: Chicken, Pasta, Cake, Soup..." autocomplete="off">
+        <input type="text" id="mainSearch" placeholder="Contoh: rendang, soto, pecel, chicken, pasta..." autocomplete="off">
         <button class="btn btn-search" onclick="performSearch()">
           Cari Sekarang
         </button>
@@ -2211,13 +2559,13 @@
     <div class="container">
       <div class="row align-items-center g-5">
         <div class="col-lg-6" data-aos="fade-right">
-          <img src="https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg" alt="Tentang Dapur Resep" class="about-img img-fluid">
+          <img src="https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg" alt="Tentang COOKLY" class="about-img img-fluid">
         </div>
         <div class="col-lg-6" data-aos="fade-left">
           <span class="section-badge"><i class="bi bi-heart me-1"></i> Tentang Kami</span>
-          <h2 class="section-title text-start">Dapur Resep — Inspirasi Memasak untuk Semua</h2>
+          <h2 class="section-title text-start">COOKLY — Inspirasi Memasak untuk Semua</h2>
           <p class="text-muted mb-4">
-            Dapur Resep adalah platform resep makanan interaktif yang menghadirkan ribuan resep dari seluruh dunia. Kami percaya bahwa memasak adalah seni yang bisa dinikmati siapa saja, dari pemula hingga chef profesional.
+            COOKLY adalah platform resep makanan interaktif yang menghadirkan ribuan resep dari seluruh dunia. Kami percaya bahwa memasak adalah seni yang bisa dinikmati siapa saja, dari pemula hingga chef profesional.
           </p>
           
           <div class="feature-item">
@@ -2254,7 +2602,7 @@
       <div class="section-header" data-aos="fade-up">
         <span class="section-badge"><i class="bi bi-question-circle me-1"></i> Bantuan</span>
         <h2 class="section-title">Pertanyaan yang Sering Diajukan</h2>
-        <p class="section-desc">Temukan jawaban atas pertanyaan umum seputar Dapur Resep</p>
+        <p class="section-desc">Temukan jawaban atas pertanyaan umum seputar COOKLY</p>
       </div>
       
       <div class="row justify-content-center">
@@ -2268,7 +2616,7 @@
               </h2>
               <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                 <div class="accordion-body">
-                  Ya! Semua resep di Dapur Resep sepenuhnya gratis. Kamu bisa mengakses, mencari, dan menyimpan inspirasi memasak tanpa biaya atau registrasi wajib.
+                  Ya! Semua resep di COOKLY sepenuhnya gratis. Kamu bisa mengakses, mencari, dan menyimpan inspirasi memasak tanpa biaya atau registrasi wajib.
                 </div>
               </div>
             </div>
@@ -2437,7 +2785,7 @@
               <path d="M21 10C16.5 10 13 13.5 13 18C13 20.5 14.2 22.7 16 24.1V30H26V24.1C27.8 22.7 29 20.5 29 18C29 13.5 25.5 10 21 10Z" fill="#e31c5f"/>
               <circle cx="21" cy="17" r="3" fill="white"/>
             </svg>
-            Dapur Resep
+            COOKLY
           </h5>
           <p class="mb-3">Platform resep makanan interaktif yang membuat memasak lebih mudah, menyenangkan, dan penuh inspirasi setiap hari.</p>
           <div class="social-links">
@@ -2461,7 +2809,7 @@
           <a href="#tentang">Tentang Kami</a>
           <a href="#faq">FAQ</a>
           <a href="#kontak">Kontak</a>
-          <a href="#cari">Cari Resep</a>
+          <a href="javascript:void(0)" onclick="goTulisResep()">Tulis Resep</a>
         </div>
         
         <div class="col-lg-4">
@@ -2477,7 +2825,7 @@
       </div>
       
       <div class="footer-bottom">
-        <p class="mb-0">&copy; 2026 Dapur Resep. Dibangun dengan ❤️ menggunakan Bootstrap & TheMealDB API.</p>
+        <p class="mb-0">&copy; 2026 COOKLY. Dibangun dengan ❤️ menggunakan Bootstrap & TheMealDB API.</p>
       </div>
     </div>
   </footer>
@@ -2495,6 +2843,121 @@
   </section>
 
   <!-- Bootstrap JS -->
+  <!-- ========== TULIS RESEP MODAL ========== -->
+  <div class="auth-overlay" id="tulisOverlay" onclick="if(event.target===this) closeTulisModal()">
+    <div class="auth-modal" style="max-width:640px;max-height:90vh;overflow:auto;" role="dialog" aria-modal="true">
+      <div class="auth-header">
+        <button type="button" class="auth-close" onclick="closeTulisModal()" aria-label="Tutup">&times;</button>
+        <h3>Tulis Resep</h3>
+        <p>Bagikan resepmu — akan muncul di Resep Terbaru</p>
+      </div>
+      <div class="auth-body">
+        <form id="formTulisResep" onsubmit="submitUserRecipe(event)">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Nama Resep</label>
+              <input type="text" class="form-control" id="urName" required placeholder="Contoh: Rendang Daging Sapi">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Kategori</label>
+              <select class="form-select" id="urCategory" required>
+                <option value="Nusantara">Nusantara</option>
+                <option value="Ayam">Ayam</option>
+                <option value="Daging">Daging</option>
+                <option value="Ikan">Ikan / Seafood</option>
+                <option value="Sayur">Sayur</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Minuman">Minuman</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Asal / Daerah</label>
+              <input type="text" class="form-control" id="urArea" placeholder="Contoh: Jawa Barat">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">URL Gambar (opsional)</label>
+              <input type="url" class="form-control" id="urImage" placeholder="https://...">
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Bahan-Bahan</label>
+              <textarea class="form-control" id="urBahan" rows="4" required placeholder="Satu bahan per baris"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Cara Memasak</label>
+              <textarea class="form-control" id="urLangkah" rows="4" required placeholder="Satu langkah per baris"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Tentang Masakan (opsional)</label>
+              <textarea class="form-control" id="urTentang" rows="2" placeholder="Cerita singkat"></textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn-auth-submit"><i class="bi bi-send me-1"></i> Publikasikan Resep</button>
+              <div class="auth-msg" id="tulisMsg"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== AUTH MODAL ========== -->
+  <div class="auth-overlay" id="authOverlay" onclick="if(event.target===this) closeAuthModal()">
+    <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <div class="auth-header">
+        <button type="button" class="auth-close" onclick="closeAuthModal()" aria-label="Tutup">&times;</button>
+        <h3 id="authTitle">Selamat datang di COOKLY</h3>
+        <p>Masuk atau daftar. Demo: demo@cookly.com / Cookly123</p>
+      </div>
+      <div class="auth-tabs">
+        <button type="button" class="active" id="tabLogin" onclick="switchAuthTab('login')">Login</button>
+        <button type="button" id="tabRegister" onclick="switchAuthTab('register')">Daftar</button>
+      </div>
+      <div class="auth-body">
+        <!-- Login -->
+        <form id="formLogin" onsubmit="handleLogin(event)">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" class="form-control" id="loginEmail" required placeholder="email@contoh.com" autocomplete="email">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Password</label>
+            <input type="password" class="form-control" id="loginPassword" required placeholder="Masukkan password" minlength="8" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn-auth-submit"><i class="bi bi-box-arrow-in-right me-1"></i> Masuk</button>
+          <div class="auth-msg" id="loginMsg"></div>
+        </form>
+        <!-- Register -->
+        <form id="formRegister" onsubmit="handleRegister(event)" style="display:none;">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nama</label>
+            <input type="text" class="form-control" id="regName" required placeholder="Nama lengkap" autocomplete="name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" class="form-control" id="regEmail" required placeholder="email@contoh.com" autocomplete="email">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Password</label>
+            <input type="password" class="form-control" id="regPassword" required placeholder="Min. 8 karakter" minlength="8" autocomplete="new-password" oninput="showPasswordStrength(this.value)">
+            <div class="password-rules small text-muted mt-2" id="passwordRules">
+              <div data-rule="len">• Minimal 8 karakter</div>
+              <div data-rule="upper">• Huruf besar (A–Z)</div>
+              <div data-rule="lower">• Huruf kecil (a–z)</div>
+              <div data-rule="num">• Angka (0–9)</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Konfirmasi Password</label>
+            <input type="password" class="form-control" id="regPassword2" required placeholder="Ulangi password" minlength="8" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn-auth-submit"><i class="bi bi-person-plus me-1"></i> Daftar</button>
+          <div class="auth-msg" id="regMsg"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- AOS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -2537,11 +3000,47 @@
     });
     
     // Create recipe card HTML (for Latest section)
+    const USER_RECIPES_KEY = 'cookly_user_recipes';
+
+    function getUserRecipes() {
+      try { return JSON.parse(localStorage.getItem(USER_RECIPES_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    function saveUserRecipes(list) {
+      localStorage.setItem(USER_RECIPES_KEY, JSON.stringify(list));
+    }
+
+    function userRecipeToMeal(r) {
+      return {
+        idMeal: r.id,
+        strMeal: r.name,
+        strCategory: r.category,
+        strArea: r.area || 'Nusantara',
+        strMealThumb: r.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80',
+        _user: true,
+        _author: r.authorName,
+        _authorEmail: r.authorEmail,
+        bahan: r.bahan,
+        langkah: r.langkah,
+        tentang: r.tentang
+      };
+    }
+
     function createRecipeCard(meal) {
+      const isUser = meal._user || String(meal.idMeal || '').startsWith('user-');
+      const session = typeof getSession === 'function' ? getSession() : null;
+      const canDelete = isUser && session && meal._authorEmail === session.email;
+      const delBtn = canDelete
+        ? `<button type="button" class="btn-del-recipe" title="Hapus resep" onclick="event.stopPropagation(); deleteUserRecipe('${meal.idMeal}')"><i class="bi bi-trash"></i></button>`
+        : '';
+      const badge = isUser ? `<span class="user-badge">Komunitas</span>` : '';
       return `
         <div class="col-sm-6 col-lg-4 col-xl-3" data-aos="fade-up">
           <div class="recipe-card" onclick="showRecipeDetail('${meal.idMeal}')">
-            <div class="card-img-wrapper">
+            <div class="card-img-wrapper position-relative">
+              ${badge}
+              ${delBtn}
               <span class="category-badge">${meal.strCategory || 'Resep'}</span>
               <img src="${meal.strMealThumb}" alt="${meal.strMeal}" loading="lazy">
             </div>
@@ -2549,6 +3048,7 @@
               <h5 class="card-title">${meal.strMeal}</h5>
               <div class="card-meta">
                 <span><i class="bi bi-geo-alt"></i> ${meal.strArea || 'Internasional'}</span>
+                ${isUser && meal._author ? `<span><i class="bi bi-person"></i> ${meal._author}</span>` : ''}
               </div>
             </div>
           </div>
@@ -2601,9 +3101,20 @@
     async function loadLatestRecipes() {
       const container = document.getElementById('latestRecipes');
       try {
-        const meals = await fetchRandomMeals(8);
+        const userMeals = getUserRecipes()
+          .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+          .map(userRecipeToMeal);
+        let apiMeals = [];
+        try {
+          apiMeals = await fetchRandomMeals(8);
+        } catch (e) {}
+        const meals = [...userMeals, ...apiMeals];
+        if (!meals.length) {
+          container.innerHTML = `<div class="col-12 text-center text-muted">Belum ada resep. Jadilah yang pertama menulis!</div>`;
+          return;
+        }
         container.innerHTML = meals.map(createRecipeCard).join('');
-        AOS.refresh();
+        if (typeof AOS !== 'undefined') AOS.refresh();
       } catch (err) {
         container.innerHTML = `<div class="col-12 text-center text-muted">Gagal memuat resep. Silakan refresh halaman.</div>`;
       }
@@ -2910,19 +3421,40 @@
       container.innerHTML = `<div class="col-12 spinner-wrapper"><div class="spinner-border text-white"></div></div>`;
       
       try {
-        const res = await fetch(`${API_BASE}/search.php?s=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        
-        if (!data.meals) {
-          container.innerHTML = `<div class="col-12 text-center text-white">Tidak ditemukan resep untuk "${query}".</div>`;
+        const localHits = searchNusantara(query);
+        let apiMeals = [];
+        try {
+          const res = await fetch(`${API_BASE}/search.php?s=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          if (data.meals) apiMeals = data.meals;
+        } catch (e) {}
+
+        // Jika query nusantara/umum Indonesia, tampilkan juga resep nusantara terkait
+        const extraNus = /indonesia|nusantara|jawa|sunda|padang|bali|madura|soto|rendang|gado|pecel|rawon|gudeg|pempek|bakso|opor|karedok|liwet|gejrot/i.test(query)
+          ? nusantaraRecipes.map(r => ({
+              idMeal: r.id, strMeal: r.name, strCategory: r.strCategory, strArea: r.strArea, strMealThumb: r.strMealThumb, _local: true
+            }))
+          : [];
+
+        const merged = [...localHits];
+        const seen = new Set(localHits.map(m => m.idMeal));
+        [...extraNus, ...apiMeals].forEach(m => {
+          if (!seen.has(m.idMeal)) {
+            seen.add(m.idMeal);
+            merged.push(m);
+          }
+        });
+
+        if (!merged.length) {
+          container.innerHTML = `<div class="col-12 text-center text-white">Tidak ditemukan resep untuk "${query}". Coba kata lain, mis. rendang, soto, chicken.</div>`;
           return;
         }
         
         container.innerHTML = `
           <div class="col-12 mb-3 text-center">
-            <h4 class="text-white">Hasil pencarian: "${query}" <span class="badge bg-light text-dark">${data.meals.length}</span></h4>
+            <h4 class="text-white">Hasil pencarian: "${query}" <span class="badge bg-light text-dark">${merged.length}</span></h4>
           </div>
-          ${data.meals.map(createRecipeCard).join('')}
+          ${merged.map(createRecipeCard).join('')}
         `;
         AOS.refresh();
       } catch (err) {
@@ -2930,7 +3462,6 @@
       }
     }
     
-    // Nav search enter key
     // Autocomplete saat mengetik
     let suggestTimer = null;
     async function fetchSuggestions(query, containerId) {
@@ -2944,15 +3475,30 @@
       box.classList.add('show');
       box.innerHTML = `<div class="suggest-loading"><span class="spinner-border spinner-border-sm me-2"></span>Mencari...</div>`;
       try {
-        const res = await fetch(`${API_BASE}/search.php?s=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        if (!data.meals || !data.meals.length) {
+        const localHits = searchNusantara(query);
+        let apiMeals = [];
+        try {
+          const res = await fetch(`${API_BASE}/search.php?s=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          if (data.meals) apiMeals = data.meals;
+        } catch (e) {}
+
+        const merged = [...localHits];
+        const seen = new Set(localHits.map(m => m.idMeal));
+        apiMeals.forEach(m => {
+          if (!seen.has(m.idMeal)) {
+            seen.add(m.idMeal);
+            merged.push(m);
+          }
+        });
+
+        if (!merged.length) {
           box.innerHTML = `<div class="suggest-empty">Tidak ada resep untuk "${query}"</div>`;
           return;
         }
-        const list = data.meals.slice(0, 6);
+        const list = merged.slice(0, 8);
         box.innerHTML = list.map(m => `
-          <div class="suggest-item" data-id="${m.idMeal}" data-name="${m.strMeal.replace(/"/g, '&quot;')}">
+          <div class="suggest-item" data-id="${m.idMeal}" data-name="${(m.strMeal || '').replace(/"/g, '&quot;')}">
             <img src="${m.strMealThumb}" alt="${m.strMeal}">
             <div class="suggest-info">
               <div class="suggest-name">${m.strMeal}</div>
@@ -2987,6 +3533,10 @@
       input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           box.classList.remove('show');
+          if (inputId === 'navSearch') {
+            document.getElementById('mainSearch').value = input.value;
+            document.getElementById('cari')?.scrollIntoView({ behavior: 'smooth' });
+          }
           performSearch();
         }
       });
@@ -3007,10 +3557,246 @@
       if (!e.target.closest('#mainSearch') && !e.target.closest('#mainSuggest')) {
         document.getElementById('mainSuggest')?.classList.remove('show');
       }
+      if (!e.target.closest('#navSearch') && !e.target.closest('#navSuggest')) {
+        document.getElementById('navSuggest')?.classList.remove('show');
+      }
     });
     
     // Show recipe detail
+    // ========== SURVEI RESEP ==========
+    function getSurveyData(recipeKey) {
+      try {
+        const raw = localStorage.getItem('survey_' + recipeKey);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      // default biar tampil ~99% terbantu
+      return { yes: 99, no: 1, voted: null };
+    }
+
+    function saveSurveyData(recipeKey, data) {
+      localStorage.setItem('survey_' + recipeKey, JSON.stringify(data));
+    }
+
+    function surveyPercent(data) {
+      const total = (data.yes || 0) + (data.no || 0);
+      if (total === 0) return 99;
+      return Math.round((data.yes / total) * 100);
+    }
+
+    function renderSurveyBlock(recipeKey) {
+      const data = getSurveyData(recipeKey);
+      const pct = surveyPercent(data);
+      const voted = data.voted;
+      return `
+        <div class="survey-box" id="surveyBox" data-key="${recipeKey}">
+          <div class="survey-pct"><span id="surveyPctNum">${pct}%</span> <span>orang terbantu dengan resep ini</span></div>
+          <h4>Apakah resep ini membantu kamu?</h4>
+          <p class="survey-sub">Berikan survei singkat untuk membantu pengguna lain</p>
+          <div class="survey-btns" id="surveyBtns">
+            ${voted ? '' : `
+              <button type="button" class="btn-yes" onclick="voteSurvey('${recipeKey}', true)">Ya, membantu 👍</button>
+              <button type="button" class="btn-no" onclick="voteSurvey('${recipeKey}', false)">Kurang membantu</button>
+            `}
+          </div>
+          <div class="survey-thanks" id="surveyThanks">${voted ? (voted === 'yes' ? 'Terima kasih! Suaramu sudah tercatat 💚' : 'Terima kasih atas masukannya 🙏') : ''}</div>
+        </div>
+      `;
+    }
+
+    function initSurveyUI(recipeKey) {
+      const data = getSurveyData(recipeKey);
+      const pctEl = document.getElementById('surveyPctNum');
+      if (pctEl) pctEl.textContent = surveyPercent(data) + '%';
+    }
+
+    function voteSurvey(recipeKey, isYes) {
+      const data = getSurveyData(recipeKey);
+      if (data.voted) {
+        showToast('Kamu sudah mengisi survei untuk resep ini');
+        return;
+      }
+      if (isYes) data.yes = (data.yes || 0) + 1;
+      else data.no = (data.no || 0) + 1;
+      data.voted = isYes ? 'yes' : 'no';
+      saveSurveyData(recipeKey, data);
+
+      const pct = surveyPercent(data);
+      const pctEl = document.getElementById('surveyPctNum');
+      if (pctEl) pctEl.textContent = pct + '%';
+      const btns = document.getElementById('surveyBtns');
+      if (btns) btns.innerHTML = '';
+      const thanks = document.getElementById('surveyThanks');
+      if (thanks) thanks.textContent = isYes ? 'Terima kasih! Suaramu sudah tercatat 💚' : 'Terima kasih atas masukannya 🙏';
+      showToast(isYes ? 'Senang resep ini membantu! 🎉' : 'Masukanmu sangat berharga');
+    }
+
+    // ========== RESEP NUSANTARA (pencarian lokal) ==========
+    const nusantaraRecipes = [
+      { id: 'nus-1', name: 'Rendang Daging Sapi Padang', strCategory: 'Nusantara', strArea: 'Sumatera Barat', strMealThumb: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80', bahan: ['1 kg daging sapi', '1 L santan', 'Bumbu rendang (cabai, bawang, kunyit, jahe, lengkuas)', 'Serai, daun jeruk, asam kandis'], langkah: ['Tumis bumbu hingga harum', 'Masukkan daging', 'Tuang santan, masak api kecil hingga kering dan hitam meresap'], tentang: 'Rendang khas Minang, kaya rempah dan protein.' },
+      { id: 'nus-2', name: 'Soto Ayam Lamongan', strCategory: 'Nusantara', strArea: 'Jawa Timur', strMealThumb: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80', bahan: ['Ayam', 'Kunyit', 'Serai', 'Soun', 'Telur', 'Koya'], langkah: ['Rebus ayam dengan bumbu kuning', 'Suwir ayam', 'Sajikan dengan soun, telur, dan koya'], tentang: 'Soto ayam segar khas Lamongan.' },
+      { id: 'nus-3', name: 'Gudeg Jogja Komplit', strCategory: 'Nusantara', strArea: 'Yogyakarta', strMealThumb: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80', bahan: ['Nangka muda', 'Santan', 'Gula Jawa', 'Daun salam', 'Areh', 'Krecek'], langkah: ['Masak nangka dengan santan dan gula Jawa hingga empuk', 'Sajikan dengan areh dan krecek'], tentang: 'Gudeg manis khas Yogyakarta.' },
+      { id: 'nus-4', name: 'Rawon Daging Jawa Timur', strCategory: 'Nusantara', strArea: 'Jawa Timur', strMealThumb: 'https://images.unsplash.com/photo-1580476262798-bddd9f4b7369?w=600&q=80', bahan: ['Daging sapi', 'Kluwek', 'Bumbu hitam', 'Tauge pendek', 'Telur asin'], langkah: ['Rebus daging', 'Tumis bumbu kluwek', 'Masak hingga kuah hitam harum'], tentang: 'Rawon kuah hitam khas Jawa Timur.' },
+      { id: 'nus-5', name: 'Pecel Madiun', strCategory: 'Nusantara', strArea: 'Jawa Timur', strMealThumb: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80', bahan: ['Sayur rebus', 'Bumbu kacang', 'Nasi', 'Rempeyek'], langkah: ['Rebus sayur', 'Siapkan bumbu pecel', 'Siram bumbu di atas sayur'], tentang: 'Pecel sehat tinggi serat.' },
+      { id: 'nus-6', name: 'Sate Madura', strCategory: 'Nusantara', strArea: 'Madura', strMealThumb: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80', bahan: ['Daging ayam/sapi', 'Kecap manis', 'Bumbu kacang', 'Lontong'], langkah: ['Tusuk dan bakar daging', 'Oles kecap', 'Sajikan dengan bumbu kacang'], tentang: 'Sate Madura dengan bumbu kacang gurih.' },
+      { id: 'nus-7', name: 'Gado-Gado Jakarta', strCategory: 'Nusantara', strArea: 'Jakarta', strMealThumb: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80', bahan: ['Sayur', 'Tahu tempe', 'Telur', 'Bumbu kacang', 'Lontong'], langkah: ['Rebus sayur', 'Goreng tahu tempe', 'Siram bumbu kacang'], tentang: 'Gado-gado lengkap protein nabati.' },
+      { id: 'nus-8', name: 'Ayam Betutu Bali', strCategory: 'Nusantara', strArea: 'Bali', strMealThumb: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=600&q=80', bahan: ['Ayam', 'Base genep', 'Daun pisang', 'Serai'], langkah: ['Lumuri ayam bumbu Bali', 'Bungkus daun pisang', 'Panggang atau kukus hingga empuk'], tentang: 'Ayam betutu rempah lengkap khas Bali.' },
+      { id: 'nus-9', name: 'Pempek Palembang', strCategory: 'Nusantara', strArea: 'Sumatera Selatan', strMealThumb: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80', bahan: ['Ikan tenggiri', 'Sagu', 'Cuko', 'Mie kuning'], langkah: ['Aduk ikan dan sagu', 'Bentuk pempek', 'Rebus lalu goreng', 'Sajikan dengan cuko'], tentang: 'Pempek ikan dengan kuah cuko pedas manis.' },
+      { id: 'nus-10', name: 'Bakso Malang', strCategory: 'Nusantara', strArea: 'Jawa Timur', strMealThumb: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&q=80', bahan: ['Daging sapi giling', 'Tepung tapioka', 'Kuah kaldu', 'Mie', 'Tahu'], langkah: ['Bentuk bakso', 'Rebus dalam kaldu', 'Sajikan komplit'], tentang: 'Bakso kenyal kuah kaldu gurih.' },
+      { id: 'nus-11', name: 'Nasi Liwet Solo', strCategory: 'Nusantara', strArea: 'Jawa Tengah', strMealThumb: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80', bahan: ['Beras', 'Santan', 'Tongkol', 'Labrus', 'Sambal'], langkah: ['Masak nasi dengan santan', 'Sajikan dengan lauk liwet'], tentang: 'Nasi liwet gurih khas Solo.' },
+      { id: 'nus-12', name: 'Sayur Asem Jakarta', strCategory: 'Nusantara', strArea: 'Jakarta', strMealThumb: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80', bahan: ['Labu', 'Kacang panjang', 'Jagung', 'Asam jawa', 'Kembang turi'], langkah: ['Rebus bahan dengan asam jawa dan bumbu', 'Koreksi rasa'], tentang: 'Sayur asem segar dan rendah kalori.' },
+      { id: 'nus-13', name: 'Tahu Gejrot Cirebon', strCategory: 'Nusantara', strArea: 'Jawa Barat', strMealThumb: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80', bahan: ['Tahu goreng', 'Kuah asam pedas', 'Bawang merah', 'Cabai'], langkah: ['Goreng tahu', 'Siram kuah gejrot'], tentang: 'Camilan Cirebon segar pedas manis.' },
+      { id: 'nus-14', name: 'Opor Ayam Lebaran', strCategory: 'Nusantara', strArea: 'Jawa', strMealThumb: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80', bahan: ['Ayam', 'Santan', 'Bumbu kuning', 'Serai', 'Daun jeruk'], langkah: ['Tumis bumbu', 'Masukkan ayam dan santan', 'Masak hingga empuk'], tentang: 'Opor ayam santan gurih untuk keluarga.' },
+      { id: 'nus-15', name: 'Karedok Sunda', strCategory: 'Nusantara', strArea: 'Jawa Barat', strMealThumb: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80', bahan: ['Sayur mentah', 'Bumbu kacang oncom', 'Kencur'], langkah: ['Iris sayur', 'Ulek bumbu karedok', 'Campur dan sajikan'], tentang: 'Salad Sunda segar dan sehat.' }
+    ];
+
+    function searchNusantara(query) {
+      const q = query.toLowerCase();
+      return nusantaraRecipes.filter(r =>
+        r.name.toLowerCase().includes(q) ||
+        r.strArea.toLowerCase().includes(q) ||
+        r.strCategory.toLowerCase().includes(q) ||
+        (r.tentang || '').toLowerCase().includes(q)
+      ).map(r => ({
+        idMeal: r.id,
+        strMeal: r.name,
+        strCategory: r.strCategory,
+        strArea: r.strArea,
+        strMealThumb: r.strMealThumb,
+        _local: true
+      }));
+    }
+
+    function showNusantaraDetail(localId) {
+      const item = nusantaraRecipes.find(r => r.id === localId);
+      if (!item) return;
+      document.body.classList.remove('pilihan-active');
+      document.getElementById('resep-pilihan')?.classList.remove('show');
+      const section = document.getElementById('recipe-detail');
+      const content = document.getElementById('recipeDetailContent');
+      content.innerHTML = `
+        <nav class="detail-breadcrumb">
+          <a href="javascript:void(0)" onclick="hideRecipeDetail()"><i class="bi bi-house-door"></i></a>
+          <span class="mx-1">›</span>
+          <a href="javascript:void(0)" onclick="hideRecipeDetail()">Nusantara</a>
+          <span class="mx-1">›</span>
+          <span class="current">${item.name}</span>
+        </nav>
+        <h1 class="detail-title">${item.name}</h1>
+        <div class="detail-image-wrap">
+          <img src="${item.strMealThumb}" alt="${item.name}">
+          <div class="teruji-stamp"><span>NUSAN<br>TARA</span></div>
+          <button class="heart-btn" onclick="toggleLove(this)"><i class="bi bi-heart"></i></button>
+        </div>
+        <div class="detail-meta-row">
+          <span><i class="bi bi-geo-alt"></i> ${item.strArea}</span>
+          <span><i class="bi bi-tag"></i> ${item.strCategory}</span>
+        </div>
+        <div class="tentang-section">
+          <h3>Tentang Masakan</h3>
+          <p>${item.tentang}</p>
+        </div>
+        <h3 class="detail-section-title">Bahan-Bahan</h3>
+        <div class="bahan-grid">
+          ${item.bahan.map(b => `<div class="bahan-item"><i class="bi bi-circle-fill"></i><span>${b}</span></div>`).join('')}
+        </div>
+        <h3 class="detail-section-title">Cara Memasak</h3>
+        <ol class="langkah-list">
+          ${item.langkah.map(s => `<li>${s}</li>`).join('')}
+        </ol>
+        ${renderSurveyBlock(item.id)}
+      `;
+      document.body.classList.add('detail-active');
+      section.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      initSurveyUI(item.id);
+    }
+
+    // Kamus bahan & istilah dapur EN → ID
+    const bahanKamus = {
+      chicken: 'ayam', beef: 'daging sapi', pork: 'daging babi', lamb: 'daging kambing', fish: 'ikan',
+      shrimp: 'udang', prawns: 'udang', salmon: 'salmon', tuna: 'tuna', egg: 'telur', eggs: 'telur',
+      milk: 'susu', butter: 'mentega', cheese: 'keju', cream: 'krim', yogurt: 'yogurt',
+      flour: 'tepung terigu', sugar: 'gula', salt: 'garam', pepper: 'lada', oil: 'minyak',
+      'olive oil': 'minyak zaitun', 'vegetable oil': 'minyak goreng', water: 'air',
+      onion: 'bawang bombay', onions: 'bawang bombay', garlic: 'bawang putih',
+      ginger: 'jahe', tomato: 'tomat', tomatoes: 'tomat', potato: 'kentang', potatoes: 'kentang',
+      carrot: 'wortel', carrots: 'wortel', rice: 'beras/nasi', pasta: 'pasta', noodles: 'mi',
+      bread: 'roti', lemon: 'lemon', lime: 'jeruk nipis', chili: 'cabai', chilli: 'cabai',
+      coriander: 'ketumbar', cumin: 'jintan', turmeric: 'kunyit', cinnamon: 'kayu manis',
+      basil: 'kemangi/basil', parsley: 'seledri/peterseli', mint: 'daun mint',
+      soy: 'kecap/kedelai', 'soy sauce': 'kecap asin', vinegar: 'cuka', honey: 'madu',
+      coconut: 'kelapa', 'coconut milk': 'santan', spinach: 'bayam', cabbage: 'kol',
+      broccoli: 'brokoli', mushroom: 'jamur', mushrooms: 'jamur', corn: 'jagung',
+      beans: 'kacang', peas: 'kacang polong', 'lemon juice': 'air lemon',
+      thyme: 'thyme', rosemary: 'rosemary', paprika: 'paprika', oregano: 'oregano',
+      shallot: 'bawang merah', shallots: 'bawang merah', celery: 'seledri',
+      'bay leaf': 'daun salam', 'bay leaves': 'daun salam', stock: 'kaldu', broth: 'kaldu',
+      'chicken stock': 'kaldu ayam', 'beef stock': 'kaldu sapi', wine: 'anggur masak',
+      mayonnaise: 'mayones', mustard: 'mustard', ketchup: 'saus tomat'
+    };
+
+    const ukurKamus = {
+      tsp: 'sdt', tbsp: 'sdm', teaspoon: 'sdt', tablespoon: 'sdm',
+      cup: 'cangkir', cups: 'cangkir', oz: 'ons', lb: 'pon', lbs: 'pon',
+      g: 'g', kg: 'kg', ml: 'ml', l: 'L', pinch: 'sejumput',
+      clove: 'siung', cloves: 'siung', slice: 'iris', slices: 'iris',
+      piece: 'buah', pieces: 'buah', can: 'kaleng', handful: 'segenggam'
+    };
+
+    function terjemahBahan(teks) {
+      if (!teks) return teks;
+      let t = ' ' + teks.toLowerCase() + ' ';
+      // ukur lebih dulu (kata pendek)
+      Object.keys(ukurKamus).sort((a,b) => b.length - a.length).forEach(en => {
+        t = t.replace(new RegExp('\\b' + en + '\\b', 'gi'), ukurKamus[en]);
+      });
+      Object.keys(bahanKamus).sort((a,b) => b.length - a.length).forEach(en => {
+        t = t.replace(new RegExp('\\b' + en + '\\b', 'gi'), bahanKamus[en]);
+      });
+      return t.trim().replace(/\s+/g, ' ');
+    }
+
+    async function terjemahKeIndonesia(teks) {
+      if (!teks || !teks.trim()) return teks;
+      // potong jika terlalu panjang (batas API)
+      const chunks = [];
+      const raw = teks.replace(/\s+/g, ' ').trim();
+      for (let i = 0; i < raw.length; i += 450) chunks.push(raw.slice(i, i + 450));
+      const hasil = [];
+      for (const chunk of chunks) {
+        try {
+          const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=en|id`;
+          const res = await fetch(url);
+          const data = await res.json();
+          const tr = data?.responseData?.translatedText;
+          hasil.push(tr && !tr.includes('MYMEMORY WARNING') ? tr : chunk);
+        } catch (e) {
+          hasil.push(chunk);
+        }
+      }
+      return hasil.join(' ');
+    }
+
+    function pecahLangkah(teks) {
+      if (!teks) return [];
+      return teks
+        .split(/\r?\n|(?<=\.)\s+(?=[A-Z0-9])|\d+\.\s+/)
+        .map(s => s.trim())
+        .filter(s => s.length > 8)
+        .map(s => s.replace(/^\d+[\.\)]\s*/, ''));
+    }
+
     async function showRecipeDetail(id) {
+      // Resep lokal nusantara
+      if (String(id).startsWith('nus-')) {
+        showNusantaraDetail(id);
+        return;
+      }
+      if (String(id).startsWith('user-')) {
+        showUserRecipeDetail(id);
+        return;
+      }
+
       // Keluar dari mode pilihan jika aktif
       document.body.classList.remove('pilihan-active');
       const pilihanSec = document.getElementById('resep-pilihan');
@@ -3019,7 +3805,7 @@
       const section = document.getElementById('recipe-detail');
       const content = document.getElementById('recipeDetailContent');
       
-      content.innerHTML = `<div class="text-center py-5"><div class="spinner-border text-danger" style="width:3rem;height:3rem;"></div></div>`;
+      content.innerHTML = `<div class="text-center py-5"><div class="spinner-border text-danger" style="width:3rem;height:3rem;"></div><p class="mt-3 text-muted">Memuat & menerjemahkan resep ke Bahasa Indonesia...</p></div>`;
       document.body.classList.add('detail-active');
       section.classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3029,21 +3815,37 @@
         const data = await res.json();
         const meal = data.meals[0];
         
-        // Collect ingredients
-        let ingredients = [];
+        // Kumpulkan semua bahan lengkap
+        let ingredientsEN = [];
         for (let i = 1; i <= 20; i++) {
           const ing = meal[`strIngredient${i}`];
           const measure = meal[`strMeasure${i}`];
           if (ing && ing.trim()) {
-            ingredients.push(`${measure || ''} ${ing}`.trim());
+            ingredientsEN.push(`${(measure || '').trim()} ${ing.trim()}`.trim());
           }
         }
-        
-        // Instructions
-        const instructions = meal.strInstructions
-          .split(/\r?\n|\. /)
-          .map(s => s.trim())
-          .filter(line => line.length > 10);
+
+        // Terjemahkan bahan (kamus lokal cepat)
+        let ingredients = ingredientsEN.map(terjemahBahan);
+
+        // Langkah memasak lengkap
+        let stepsEN = pecahLangkah(meal.strInstructions || '');
+        if (stepsEN.length < 2 && meal.strInstructions) {
+          stepsEN = meal.strInstructions.split(/(?<=\.)\s+/).map(s => s.trim()).filter(s => s.length > 8);
+        }
+
+        // Terjemahkan langkah & ringkasan ke Indonesia
+        let instructions = [];
+        for (const step of stepsEN) {
+          instructions.push(await terjemahKeIndonesia(step));
+        }
+        if (!instructions.length) {
+          instructions = [await terjemahKeIndonesia(meal.strInstructions || 'Ikuti petunjuk pada kemasan bahan.')];
+        }
+
+        const tentangFull = await terjemahKeIndonesia(
+          (meal.strInstructions || '').slice(0, 500)
+        );
 
         // Fake nutrition for visual match
         const kalori = (200 + Math.random() * 150).toFixed(1);
@@ -3055,16 +3857,12 @@
         const times = [20, 25, 30, 35, 40, 45, 60];
         const time = times[Math.floor(Math.random() * times.length)];
         const porsi = [2, 3, 4, 5, 6][Math.floor(Math.random() * 5)];
-        
-        const tentangText = meal.strInstructions.length > 200 
-          ? meal.strInstructions.substring(0, 400) + '...'
-          : meal.strInstructions;
 
-        // High quality image (larger size from TheMealDB)
         const imgSrc = meal.strMealThumb ? meal.strMealThumb.replace('/preview', '') : meal.strMealThumb;
+        const kategoriID = { Beef: 'Daging Sapi', Chicken: 'Ayam', Dessert: 'Hidangan Penutup', Lamb: 'Kambing', Miscellaneous: 'Lainnya', Pasta: 'Pasta', Pork: 'Babi', Seafood: 'Hasil Laut', Side: 'Pendamping', Starter: 'Pembuka', Vegan: 'Vegan', Vegetarian: 'Vegetarian', Breakfast: 'Sarapan', Goat: 'Kambing' };
+        const kategori = kategoriID[meal.strCategory] || meal.strCategory;
         
         content.innerHTML = `
-          <!-- Breadcrumb -->
           <nav class="detail-breadcrumb" aria-label="breadcrumb">
             <a href="javascript:void(0)" onclick="hideRecipeDetail()"><i class="bi bi-house-door"></i></a>
             <span class="mx-1">›</span>
@@ -3073,10 +3871,8 @@
             <span class="current">${meal.strMeal}</span>
           </nav>
 
-          <!-- Title -->
           <h1 class="detail-title">${meal.strMeal}</h1>
 
-          <!-- Image -->
           <div class="detail-image-wrap">
             <img src="${imgSrc}" alt="${meal.strMeal}" loading="eager">
             <div class="teruji-stamp">
@@ -3087,7 +3883,6 @@
             </button>
           </div>
 
-          <!-- Rating -->
           <div class="detail-rating-row">
             <span class="stars" id="starRating" data-rating="0">
               <i class="bi bi-star" data-value="1"></i>
@@ -3102,13 +3897,13 @@
             </button>
           </div>
 
-          <!-- Time & Servings -->
           <div class="detail-meta-row">
             <span><i class="bi bi-clock"></i> ${time} Menit</span>
             <span><i class="bi bi-people"></i> ${porsi} Porsi</span>
+            <span><i class="bi bi-tag"></i> ${kategori}</span>
+            <span><i class="bi bi-geo-alt"></i> ${meal.strArea || '-'}</span>
           </div>
 
-          <!-- Nutrition -->
           <div class="nutrition-row">
             <div class="nutrition-item">
               <div class="n-icon" style="background:#ff7043;"><i class="bi bi-fire"></i></div>
@@ -3136,28 +3931,25 @@
               <div class="n-value">${serat} gram</div>
             </div>
           </div>
-          <p class="nutrition-note">Kandungan tiap satu porsi</p>
+          <p class="nutrition-note">Kandungan tiap satu porsi (perkiraan)</p>
 
-          <!-- Tentang Masakan -->
           <div class="tentang-section">
             <h3>Tentang Masakan</h3>
-            <p>${tentangText.replace(/\n/g, '</p><p>')}</p>
-            <p>Resep <strong>${meal.strMeal}</strong> ini berasal dari kategori <strong>${meal.strCategory}</strong> (${meal.strArea}). Praktis, lezat, dan cocok untuk disajikan kapan saja. Yuk, coba di rumah!</p>
+            <p>${tentangFull}</p>
+            <p>Resep <strong>${meal.strMeal}</strong> termasuk kategori <strong>${kategori}</strong> dari daerah <strong>${meal.strArea || 'Internasional'}</strong>. Bahan dan langkah di bawah sudah dilengkapi agar mudah diikuti di rumah.</p>
           </div>
 
-          <!-- Bahan-Bahan -->
-          <h3 class="detail-section-title">Bahan-Bahan</h3>
+          <h3 class="detail-section-title">Bahan-Bahan (${ingredients.length} item)</h3>
           <div class="bahan-grid">
-            ${ingredients.map(ing => `
+            ${ingredients.map((ing, idx) => `
               <div class="bahan-item">
                 <i class="bi bi-circle-fill"></i>
-                <span>${ing}</span>
+                <span>${ing || ingredientsEN[idx]}</span>
               </div>
             `).join('')}
           </div>
 
-          <!-- Cara Memasak -->
-          <h3 class="detail-section-title">Cara Memasak</h3>
+          <h3 class="detail-section-title">Cara Memasak (${instructions.length} langkah)</h3>
           <ol class="langkah-list">
             ${instructions.map(step => `<li>${step}</li>`).join('')}
           </ol>
@@ -3169,11 +3961,14 @@
               </a>
             </div>
           ` : ''}
+
+          ${renderSurveyBlock('api-' + meal.idMeal)}
         `;
 
-        // Aktifkan rating bintang interaktif
         initStarRating();
+        initSurveyUI('api-' + meal.idMeal);
       } catch (err) {
+        console.error(err);
         content.innerHTML = `<div class="text-center text-muted py-5">Gagal memuat detail resep. <a href="javascript:void(0)" onclick="hideRecipeDetail()">Kembali</a></div>`;
       }
     }
@@ -3245,8 +4040,8 @@
     // Share recipe
     async function shareRecipe(title, imageUrl) {
       const shareData = {
-        title: title + ' - Dapur Resep',
-        text: `Coba resep lezat: ${title} di Dapur Resep!`,
+        title: title + ' - COOKLY',
+        text: `Coba resep lezat: ${title} di COOKLY!`,
         url: window.location.href.split('#')[0] + '#resep-populer'
       };
 
@@ -3333,19 +4128,25 @@
         { name: 'Bubur Ayam Kampung Sehat', img: 'https://images.unsplash.com/photo-1589301763310-b9334ac68191?w=600&q=80', kcal: 280, bahan: ['100g beras', '150g ayam kampung', 'Daun bawang', 'Seledri', 'Bawang goreng', 'Kecap & garam secukupnya'], langkah: ['Rebus beras menjadi bubur.', 'Rebus ayam, suwir.', 'Sajikan bubur dengan ayam, daun bawang, seledri, dan bawang goreng.'], tentang: 'Bubur ayam kampung rendah lemak, cocok untuk sarapan bergizi.' },
         { name: 'Salad Tahu Tempe Sayur', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80', kcal: 220, bahan: ['100g tahu', '100g tempe', 'Selada, timun, tomat', 'Dressing lemon-madu'], langkah: ['Goreng tahu & tempe minimal minyak.', 'Potong sayur.', 'Campur dengan dressing.'], tentang: 'Sarapan tinggi protein nabati khas Indonesia.' },
         { name: 'Oatmeal Pisang Madu Lokal', img: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=600&q=80', kcal: 250, bahan: ['40g oatmeal', '1 pisang', '1 sdm madu', 'Susu rendah lemak'], langkah: ['Masak oatmeal dengan susu.', 'Tambah pisang dan madu.'], tentang: 'Sarapan serat tinggi dengan bahan lokal.' },
-        { name: 'Lontong Sayur Sehat', img: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80', kcal: 320, bahan: ['Lontong', 'Labu siam', 'Kacang panjang', 'Santan encer', 'Bumbu kuning'], langkah: ['Tumis bumbu.', 'Masak sayur dengan santan encer.', 'Sajikan dengan lontong.'], tentang: 'Sarapan Jawa klasik yang lebih ringan dengan santan encer.' }
+        { name: 'Lontong Sayur Sehat', img: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80', kcal: 320, bahan: ['Lontong', 'Labu siam', 'Kacang panjang', 'Santan encer', 'Bumbu kuning'], langkah: ['Tumis bumbu.', 'Masak sayur dengan santan encer.', 'Sajikan dengan lontong.'], tentang: 'Sarapan Jawa klasik yang lebih ringan dengan santan encer.' },
+        { name: 'Nasi Jagung Sayur Bobor', img: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80', kcal: 300, bahan: ['Nasi jagung', 'Bayam', 'Labu siam', 'Santan encer', 'Kemangi'], langkah: ['Masak sayur bobor dengan santan encer.', 'Sajikan dengan nasi jagung.'], tentang: 'Sarapan tradisional Jawa tinggi serat.' },
+        { name: 'Serabi Kuah Oncom', img: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=600&q=80', kcal: 270, bahan: ['Tepung beras', 'Santan', 'Oncom', 'Daun bawang'], langkah: ['Masak serabi.', 'Tumis oncom untuk kuah.', 'Sajikan hangat.'], tentang: 'Serabi Sunda dengan kuah oncom gurih.' }
       ],
       siang: [
         { name: 'Pecel Sayur dengan Nasi Merah', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80', kcal: 420, bahan: ['Nasi merah 150g', 'Kangkung, tauge, kacang panjang', 'Bumbu pecel kacang', 'Kerupuk singkong'], langkah: ['Kukus sayur.', 'Siapkan bumbu pecel.', 'Sajikan dengan nasi merah.'], tentang: 'Makan siang Jawa kaya serat dan protein nabati.' },
         { name: 'Sup Ayam Jahe Bening', img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80', kcal: 310, bahan: ['200g ayam', 'Jahe', 'Wortel', 'Kentang', 'Daun bawang', 'Garam'], langkah: ['Rebus ayam dengan jahe.', 'Masukkan wortel dan kentang.', 'Taburi daun bawang.'], tentang: 'Sup ayam jahe menghangatkan dan rendah kalori.' },
         { name: 'Tumis Kangkung Tempe', img: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80', kcal: 350, bahan: ['1 ikat kangkung', '100g tempe', 'Bawang putih', 'Cabai', 'Nasi merah'], langkah: ['Tumis bawang dan cabai.', 'Masukkan tempe lalu kangkung.', 'Sajikan dengan nasi merah.'], tentang: 'Lauk sederhana, bergizi, khas rumah tangga Jawa.' },
-        { name: 'Ikan Bakar Sambal Matah', img: 'https://images.unsplash.com/photo-1580476262798-bddd9f4b7369?w=600&q=80', kcal: 380, bahan: ['200g ikan kembung', 'Sambal matah', 'Jeruk limau', 'Nasi merah'], langkah: ['Bakar ikan.', 'Buat sambal matah.', 'Sajikan bersama.'], tentang: 'Protein tinggi, lemak sehat dari ikan.' }
+        { name: 'Ikan Bakar Sambal Matah', img: 'https://images.unsplash.com/photo-1580476262798-bddd9f4b7369?w=600&q=80', kcal: 380, bahan: ['200g ikan kembung', 'Sambal matah', 'Jeruk limau', 'Nasi merah'], langkah: ['Bakar ikan.', 'Buat sambal matah.', 'Sajikan bersama.'], tentang: 'Protein tinggi, lemak sehat dari ikan.' },
+        { name: 'Rawon Daging + Nasi', img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80', kcal: 450, bahan: ['Daging sapi', 'Kluwek', 'Tauge', 'Telur asin', 'Nasi'], langkah: ['Masak rawon hingga kuah hitam harum.', 'Sajikan dengan nasi dan pelengkap.'], tentang: 'Rawon Jawa Timur mengenyangkan dan bergizi.' },
+        { name: 'Gudeg Kuah dengan Nasi', img: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80', kcal: 430, bahan: ['Nangka muda', 'Santan', 'Gula Jawa', 'Nasi', 'Areh'], langkah: ['Masak gudeg hingga empuk.', 'Sajikan komplit dengan nasi.'], tentang: 'Gudeg Jogja manis gurih untuk makan siang.' }
       ],
       malam: [
         { name: 'Tumis Tahu Kecambah', img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80', kcal: 260, bahan: ['150g tahu', 'Tauge', 'Bawang putih', 'Kecap asin'], langkah: ['Tumis bawang.', 'Masukkan tahu dan tauge.', 'Bumbui secukupnya.'], tentang: 'Makan malam ringan, mudah dicerna.' },
         { name: 'Sayur Asem Jawa + Tempe', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80', kcal: 290, bahan: ['Labu', 'Kacang panjang', 'Jagung', 'Asam jawa', 'Tempe goreng'], langkah: ['Rebus sayur dengan asam jawa.', 'Goreng tempe tipis.', 'Sajikan hangat.'], tentang: 'Kuah segar khas Jawa, cocok malam hari.' },
         { name: 'Capcay Kuah Sayuran', img: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80', kcal: 240, bahan: ['Brokoli', 'Wortel', 'Jamur', 'Bunga kol', 'Bawang putih'], langkah: ['Tumis bawang.', 'Masukkan sayur, tambah sedikit air.', 'Masak hingga matang.'], tentang: 'Makan malam tinggi serat, rendah kalori.' },
-        { name: 'Pepes Tahu Jamur', img: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80', kcal: 270, bahan: ['Tahu', 'Jamur tiram', 'Kemangi', 'Bumbu kuning', 'Daun pisang'], langkah: ['Campur tahu, jamur, bumbu.', 'Bungkus daun pisang.', 'Kukus 30 menit.'], tentang: 'Pepes tanpa minyak berlebih, aroma khas Jawa.' }
+        { name: 'Pepes Tahu Jamur', img: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80', kcal: 270, bahan: ['Tahu', 'Jamur tiram', 'Kemangi', 'Bumbu kuning', 'Daun pisang'], langkah: ['Campur tahu, jamur, bumbu.', 'Bungkus daun pisang.', 'Kukus 30 menit.'], tentang: 'Pepes tanpa minyak berlebih, aroma khas Jawa.' },
+        { name: 'Sop Buntut Kuah Bening', img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80', kcal: 320, bahan: ['Buntut sapi', 'Wortel', 'Kentang', 'Daun bawang', 'Bumbu sup'], langkah: ['Rebus buntut hingga empuk.', 'Masukkan sayur.', 'Sajikan hangat.'], tentang: 'Sup buntut ringan untuk malam hari.' },
+        { name: 'Karedok Sayur Sunda', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80', kcal: 210, bahan: ['Kacang panjang', 'Tauge', 'Kol', 'Bumbu kacang kencur'], langkah: ['Iris sayur mentah.', 'Ulek bumbu karedok.', 'Campur dan sajikan.'], tentang: 'Salad Sunda segar, cocok makan malam ringan.' }
       ]
     };
 
@@ -3477,11 +4278,13 @@
         <ol class="langkah-list">
           ${item.langkah.map(s => `<li>${s}</li>`).join('')}
         </ol>
+        ${renderSurveyBlock('hari-' + slotKey + '-' + (item.name || '').slice(0, 20))}
       `;
 
       document.body.classList.add('detail-active');
       section.classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      initSurveyUI('hari-' + slotKey + '-' + (item.name || '').slice(0, 20));
     }
 
     function showMenuHariIniDetail() {
@@ -3519,6 +4322,493 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ========== AUTH (Login / Daftar + JWT) ==========
+    const AUTH_USERS_KEY = 'cookly_users';
+    const AUTH_TOKEN_KEY = 'cookly_jwt';
+    const JWT_SECRET = 'cookly-demo-secret-key-2026';
+    const JWT_EXPIRE_HOURS = 24;
+
+    function b64urlEncode(str) {
+      try {
+        const bytes = new TextEncoder().encode(String(str));
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      } catch (e) {
+        return btoa(String(str)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      }
+    }
+
+    function b64urlDecode(str) {
+      str = String(str).replace(/-/g, '+').replace(/_/g, '/');
+      while (str.length % 4) str += '=';
+      const binary = atob(str);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new TextDecoder().decode(bytes);
+    }
+
+    function createJWT(payload) {
+      const header = { alg: 'HS256', typ: 'JWT' };
+      const now = Math.floor(Date.now() / 1000);
+      const body = Object.assign({}, payload, {
+        iat: now,
+        exp: now + (JWT_EXPIRE_HOURS * 3600)
+      });
+      const h = b64urlEncode(JSON.stringify(header));
+      const p = b64urlEncode(JSON.stringify(body));
+      const sig = b64urlEncode(JWT_SECRET + '.' + h + '.' + p);
+      return h + '.' + p + '.' + sig;
+    }
+
+    function verifyJWT(token) {
+      if (!token || typeof token !== 'string') {
+        return { ok: false, error: 'Token tidak ditemukan. Silakan login kembali.' };
+      }
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        return { ok: false, error: 'Format token tidak valid.' };
+      }
+      const h = parts[0], p = parts[1], sig = parts[2];
+      const expected = b64urlEncode(JWT_SECRET + '.' + h + '.' + p);
+      if (sig !== expected) {
+        return { ok: false, error: 'Token tidak sah atau telah dimodifikasi.' };
+      }
+      try {
+        const payload = JSON.parse(b64urlDecode(p));
+        const now = Math.floor(Date.now() / 1000);
+        if (payload.exp && payload.exp < now) {
+          return { ok: false, error: 'Sesi login sudah kedaluwarsa. Silakan login lagi.' };
+        }
+        return { ok: true, payload: payload };
+      } catch (e) {
+        return { ok: false, error: 'Token rusak. Silakan login kembali.' };
+      }
+    }
+
+    function getUsers() {
+      try { return JSON.parse(localStorage.getItem(AUTH_USERS_KEY) || '[]'); }
+      catch (e) { return []; }
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(users));
+    }
+
+    // Akun demo default agar login selalu bisa dicoba
+    function ensureDemoUser() {
+      const users = getUsers();
+      const demoEmail = 'demo@cookly.com';
+      if (!users.some(function(u) { return u.email === demoEmail; })) {
+        users.push({ name: 'Demo COOKLY', email: demoEmail, password: 'Cookly123' });
+        saveUsers(users);
+      }
+    }
+
+    function getSession() {
+      try {
+        const token = localStorage.getItem(AUTH_TOKEN_KEY);
+        const result = verifyJWT(token);
+        if (!result.ok) {
+          if (token) localStorage.removeItem(AUTH_TOKEN_KEY);
+          return null;
+        }
+        return {
+          email: result.payload.email,
+          name: result.payload.name,
+          token: token
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setSession(user) {
+      if (user) {
+        const token = createJWT({ email: user.email, name: user.name, sub: user.email });
+        localStorage.setItem(AUTH_TOKEN_KEY, token);
+      } else {
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+      }
+      ensureDemoUser();
+      updateAuthUI();
+    }
+
+    function validatePassword(password) {
+      const rules = {
+        len: password.length >= 8,
+        upper: /[A-Z]/.test(password),
+        lower: /[a-z]/.test(password),
+        num: /[0-9]/.test(password)
+      };
+      const messages = [];
+      if (!rules.len) messages.push('minimal 8 karakter');
+      if (!rules.upper) messages.push('huruf besar');
+      if (!rules.lower) messages.push('huruf kecil');
+      if (!rules.num) messages.push('angka');
+      return {
+        ok: rules.len && rules.upper && rules.lower && rules.num,
+        rules: rules,
+        message: messages.length ? 'Password harus mengandung: ' + messages.join(', ') + '.' : ''
+      };
+    }
+
+    function showPasswordStrength(password) {
+      const result = validatePassword(password || '');
+      const box = document.getElementById('passwordRules');
+      if (!box) return;
+      box.querySelectorAll('[data-rule]').forEach(function(el) {
+        const key = el.getAttribute('data-rule');
+        const ok = result.rules[key];
+        el.style.color = ok ? '#43a047' : '#888';
+        el.style.fontWeight = ok ? '600' : '400';
+      });
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function setAuthMsg(el, type, text) {
+      if (!el) return;
+      el.className = 'auth-msg ' + (type || '');
+      el.textContent = text || '';
+    }
+
+    function goTulisResep() {
+      const session = getSession();
+      if (!session) {
+        if (typeof showToast === 'function') showToast('Login dulu untuk menulis resep');
+        openAuthModal('login');
+        return;
+      }
+      openTulisModal();
+    }
+
+    function openTulisModal() {
+      var overlay = document.getElementById('tulisOverlay');
+      if (!overlay) return;
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      var msg = document.getElementById('tulisMsg');
+      if (msg) { msg.textContent = ''; msg.className = 'auth-msg'; }
+    }
+
+    function closeTulisModal() {
+      var overlay = document.getElementById('tulisOverlay');
+      if (overlay) overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function openAuthModal(tab) {
+      ensureDemoUser();
+      var overlay = document.getElementById('authOverlay');
+      if (!overlay) {
+        alert('Form login tidak ditemukan. Refresh halaman.');
+        return;
+      }
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      switchAuthTab(tab || 'login');
+    }
+
+    function closeAuthModal() {
+      var overlay = document.getElementById('authOverlay');
+      if (overlay) overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      setAuthMsg(document.getElementById('loginMsg'), '', '');
+      setAuthMsg(document.getElementById('regMsg'), '', '');
+    }
+
+    function switchAuthTab(tab) {
+      var isLogin = tab === 'login';
+      var tabLogin = document.getElementById('tabLogin');
+      var tabRegister = document.getElementById('tabRegister');
+      var formLogin = document.getElementById('formLogin');
+      var formRegister = document.getElementById('formRegister');
+      if (tabLogin) tabLogin.classList.toggle('active', isLogin);
+      if (tabRegister) tabRegister.classList.toggle('active', !isLogin);
+      if (formLogin) formLogin.style.display = isLogin ? 'block' : 'none';
+      if (formRegister) formRegister.style.display = isLogin ? 'none' : 'block';
+      setAuthMsg(document.getElementById('loginMsg'), '', '');
+      setAuthMsg(document.getElementById('regMsg'), '', '');
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      var name = (document.getElementById('regName').value || '').trim();
+      var email = (document.getElementById('regEmail').value || '').trim().toLowerCase();
+      var password = document.getElementById('regPassword').value || '';
+      var password2 = document.getElementById('regPassword2').value || '';
+      var msg = document.getElementById('regMsg');
+
+      if (!name || name.length < 2) {
+        setAuthMsg(msg, 'error', 'Nama minimal 2 karakter.');
+        return;
+      }
+      if (!validateEmail(email)) {
+        setAuthMsg(msg, 'error', 'Format email tidak valid.');
+        return;
+      }
+      var pw = validatePassword(password);
+      if (!pw.ok) {
+        setAuthMsg(msg, 'error', pw.message);
+        return;
+      }
+      if (password !== password2) {
+        setAuthMsg(msg, 'error', 'Konfirmasi password tidak cocok.');
+        return;
+      }
+
+      var users = getUsers();
+      if (users.some(function(u) { return u.email === email; })) {
+        setAuthMsg(msg, 'error', 'Email sudah terdaftar. Silakan login.');
+        return;
+      }
+
+      users.push({ name: name, email: email, password: password });
+      saveUsers(users);
+      try {
+        setSession({ name: name, email: email });
+        setAuthMsg(msg, 'success', 'Berhasil daftar! Selamat datang, ' + name);
+        if (typeof showToast === 'function') showToast('Akun berhasil dibuat 🎉');
+        setTimeout(closeAuthModal, 800);
+        e.target.reset();
+        showPasswordStrength('');
+      } catch (err) {
+        console.error(err);
+        setAuthMsg(msg, 'error', 'Gagal menyimpan sesi. Coba lagi.');
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      ensureDemoUser();
+      var email = (document.getElementById('loginEmail').value || '').trim().toLowerCase();
+      var password = document.getElementById('loginPassword').value || '';
+      var msg = document.getElementById('loginMsg');
+
+      if (!email && !password) {
+        setAuthMsg(msg, 'error', 'Email dan password wajib diisi.');
+        return;
+      }
+      if (!email) {
+        setAuthMsg(msg, 'error', 'Email wajib diisi.');
+        return;
+      }
+      if (!validateEmail(email)) {
+        setAuthMsg(msg, 'error', 'Format email tidak valid.');
+        return;
+      }
+      if (!password) {
+        setAuthMsg(msg, 'error', 'Password wajib diisi.');
+        return;
+      }
+
+      var users = getUsers();
+      var byEmail = users.find(function(u) { return String(u.email).toLowerCase() === email; });
+      if (!byEmail) {
+        setAuthMsg(msg, 'error', 'Akun tidak ditemukan. Daftar dulu, atau pakai demo@cookly.com / Cookly123');
+        return;
+      }
+      if (String(byEmail.password) !== String(password)) {
+        setAuthMsg(msg, 'error', 'Password salah. Coba lagi. (Demo: Cookly123)');
+        return;
+      }
+
+      try {
+        setSession(byEmail);
+        setAuthMsg(msg, 'success', 'Login berhasil! Halo, ' + byEmail.name);
+        if (typeof showToast === 'function') showToast('Selamat datang, ' + byEmail.name + ' 👋');
+        setTimeout(closeAuthModal, 700);
+        e.target.reset();
+      } catch (err) {
+        console.error(err);
+        setAuthMsg(msg, 'error', 'Gagal membuat sesi login. Coba refresh halaman.');
+      }
+    }
+
+    function logoutUser() {
+      setSession(null);
+      showToast('Kamu sudah keluar. Token JWT dihapus.');
+    }
+
+    function updateTulisFormVisibility() {
+      /* form tulis resep sekarang di modal */
+    }
+
+    function submitUserRecipe(e) {
+      e.preventDefault();
+      const session = getSession();
+      const msg = document.getElementById('tulisMsg');
+      if (!session) {
+        if (msg) {
+          msg.className = 'auth-msg error';
+          msg.textContent = 'Login atau daftar dulu untuk menulis resep.';
+        }
+        openAuthModal('login');
+        return;
+      }
+
+      const name = document.getElementById('urName').value.trim();
+      const category = document.getElementById('urCategory').value;
+      const area = document.getElementById('urArea').value.trim() || 'Indonesia';
+      const image = document.getElementById('urImage').value.trim();
+      const bahanRaw = document.getElementById('urBahan').value.trim();
+      const langkahRaw = document.getElementById('urLangkah').value.trim();
+      const tentang = document.getElementById('urTentang').value.trim();
+
+      if (!name || name.length < 3) {
+        msg.className = 'auth-msg error';
+        msg.textContent = 'Nama resep minimal 3 karakter.';
+        return;
+      }
+      const bahan = bahanRaw.split(/\n+/).map(s => s.trim()).filter(Boolean);
+      const langkah = langkahRaw.split(/\n+/).map(s => s.trim()).filter(Boolean);
+      if (bahan.length < 2) {
+        msg.className = 'auth-msg error';
+        msg.textContent = 'Isi minimal 2 bahan (satu per baris).';
+        return;
+      }
+      if (langkah.length < 2) {
+        msg.className = 'auth-msg error';
+        msg.textContent = 'Isi minimal 2 langkah memasak (satu per baris).';
+        return;
+      }
+
+      const recipe = {
+        id: 'user-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+        name,
+        category,
+        area,
+        image: image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80',
+        bahan,
+        langkah,
+        tentang: tentang || `Resep ${name} dibagikan oleh ${session.name} di COOKLY.`,
+        authorName: session.name,
+        authorEmail: session.email,
+        createdAt: Date.now()
+      };
+
+      const list = getUserRecipes();
+      list.unshift(recipe);
+      saveUserRecipes(list);
+
+      msg.className = 'auth-msg success';
+      msg.textContent = 'Resep berhasil dipublikasikan! Muncul di Resep Terbaru.';
+      if (typeof showToast === 'function') showToast('Resep kamu sudah tayang di beranda 🎉');
+      e.target.reset();
+      loadLatestRecipes();
+      setTimeout(function() {
+        closeTulisModal();
+        var sec = document.getElementById('resep-terbaru');
+        if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+
+    function deleteUserRecipe(id) {
+      const session = getSession();
+      if (!session) {
+        openAuthModal('login');
+        return;
+      }
+      const list = getUserRecipes();
+      const item = list.find(r => r.id === id);
+      if (!item) return;
+      if (item.authorEmail !== session.email) {
+        showToast('Kamu hanya bisa menghapus resep sendiri');
+        return;
+      }
+      if (!confirm('Hapus resep "' + item.name + '"? Tindakan ini tidak bisa dibatalkan.')) return;
+      saveUserRecipes(list.filter(r => r.id !== id));
+      showToast('Resep dihapus');
+      loadLatestRecipes();
+      if (document.body.classList.contains('detail-active')) {
+        hideRecipeDetail();
+      }
+    }
+
+    function showUserRecipeDetail(id) {
+      const item = getUserRecipes().find(r => r.id === id);
+      if (!item) {
+        showToast('Resep tidak ditemukan (mungkin sudah dihapus)');
+        return;
+      }
+      document.body.classList.remove('pilihan-active');
+      document.getElementById('resep-pilihan')?.classList.remove('show');
+      const section = document.getElementById('recipe-detail');
+      const content = document.getElementById('recipeDetailContent');
+      const session = getSession();
+      const canDelete = session && session.email === item.authorEmail;
+
+      content.innerHTML = `
+        <nav class="detail-breadcrumb">
+          <a href="javascript:void(0)" onclick="hideRecipeDetail()"><i class="bi bi-house-door"></i></a>
+          <span class="mx-1">›</span>
+          <a href="javascript:void(0)" onclick="hideRecipeDetail()">Komunitas</a>
+          <span class="mx-1">›</span>
+          <span class="current">${item.name}</span>
+        </nav>
+        <h1 class="detail-title">${item.name}</h1>
+        <div class="detail-image-wrap">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="teruji-stamp"><span>KOMU<br>NITAS</span></div>
+          <button class="heart-btn" onclick="toggleLove(this)"><i class="bi bi-heart"></i></button>
+        </div>
+        <div class="detail-meta-row">
+          <span><i class="bi bi-person"></i> ${item.authorName}</span>
+          <span><i class="bi bi-tag"></i> ${item.category}</span>
+          <span><i class="bi bi-geo-alt"></i> ${item.area}</span>
+        </div>
+        <div class="tentang-section">
+          <h3>Tentang Masakan</h3>
+          <p>${item.tentang || ''}</p>
+        </div>
+        <h3 class="detail-section-title">Bahan-Bahan</h3>
+        <div class="bahan-grid">
+          ${item.bahan.map(b => `<div class="bahan-item"><i class="bi bi-circle-fill"></i><span>${b}</span></div>`).join('')}
+        </div>
+        <h3 class="detail-section-title">Cara Memasak</h3>
+        <ol class="langkah-list">
+          ${item.langkah.map(s => `<li>${s}</li>`).join('')}
+        </ol>
+        ${canDelete ? `<div class="text-center mt-4"><button class="btn btn-outline-danger rounded-pill" onclick="deleteUserRecipe('${item.id}')"><i class="bi bi-trash me-1"></i> Hapus Resep Ini</button></div>` : ''}
+        ${typeof renderSurveyBlock === 'function' ? renderSurveyBlock(item.id) : ''}
+      `;
+      document.body.classList.add('detail-active');
+      section.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (typeof initSurveyUI === 'function') initSurveyUI(item.id);
+    }
+
+    function updateAuthUI() {
+      try {
+        const session = getSession();
+        const btn = document.getElementById('btnOpenAuth');
+        const chip = document.getElementById('userChip');
+        if (session) {
+          if (btn) btn.style.display = 'none';
+          if (chip) {
+            chip.classList.add('show');
+            const label = document.getElementById('userNameLabel');
+            const avatar = document.getElementById('userAvatar');
+            if (label) label.textContent = (session.name || 'User').split(' ')[0];
+            if (avatar) avatar.textContent = (session.name || 'U').charAt(0).toUpperCase();
+          }
+        } else {
+          if (btn) btn.style.display = '';
+          if (chip) chip.classList.remove('show');
+        }
+        updateTulisFormVisibility();
+      } catch (err) {
+        console.error('updateAuthUI', err);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { closeAuthModal(); if (typeof closeTulisModal === 'function') closeTulisModal(); }
+    });
+
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       loadLatestRecipes();
@@ -3528,19 +4818,92 @@
       initPilihanCarousel();
       renderMenuPilihanBtns();
       setMenuFromSet('set-1');
+      updateAuthUI();
 
-      // Saat klik menu navbar, keluar dari mode khusus
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-          if (document.body.classList.contains('pilihan-active')) {
-            document.body.classList.remove('pilihan-active');
-            document.getElementById('resep-pilihan').classList.remove('show');
-          }
-          if (document.body.classList.contains('detail-active')) {
-            document.body.classList.remove('detail-active');
-            document.getElementById('recipe-detail').classList.remove('show');
-          }
+      // ===== Custom ScrollSpy (lebih stabil) =====
+      const navLinks = Array.from(document.querySelectorAll('#mainNavbar .nav-link[href^="#"]'));
+      const sectionIds = navLinks.map(l => l.getAttribute('href')).filter(Boolean);
+      const sections = sectionIds
+        .map(id => document.querySelector(id))
+        .filter(Boolean);
+
+      function setActiveNav(id) {
+        navLinks.forEach(link => {
+          const isActive = link.getAttribute('href') === id;
+          link.classList.toggle('active', isActive);
         });
+      }
+
+      function exitSpecialModes() {
+        if (document.body.classList.contains('pilihan-active')) {
+          document.body.classList.remove('pilihan-active');
+          document.getElementById('resep-pilihan')?.classList.remove('show');
+        }
+        if (document.body.classList.contains('detail-active')) {
+          document.body.classList.remove('detail-active');
+          document.getElementById('recipe-detail')?.classList.remove('show');
+        }
+      }
+
+      function closeMobileNav() {
+        const collapse = document.getElementById('navbarNav');
+        if (collapse && collapse.classList.contains('show') && window.bootstrap) {
+          bootstrap.Collapse.getOrCreateInstance(collapse).hide();
+        }
+      }
+
+      // Update active saat scroll
+      let scrollSpyLock = false;
+      function updateScrollSpy() {
+        if (scrollSpyLock) return;
+        if (document.body.classList.contains('detail-active') || document.body.classList.contains('pilihan-active')) return;
+
+        const offset = 120;
+        let current = '#home';
+        for (const sec of sections) {
+          const top = sec.getBoundingClientRect().top;
+          if (top - offset <= 0) {
+            current = '#' + sec.id;
+          }
+        }
+        setActiveNav(current);
+      }
+
+      window.addEventListener('scroll', () => {
+        window.requestAnimationFrame(updateScrollSpy);
+      }, { passive: true });
+      updateScrollSpy();
+
+      // Klik menu → scroll ke section
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          const target = href ? document.querySelector(href) : null;
+          if (!target) return;
+
+          e.preventDefault();
+          exitSpecialModes();
+          scrollSpyLock = true;
+          setActiveNav(href);
+
+          const y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+          history.replaceState(null, '', href);
+          closeMobileNav();
+
+          setTimeout(() => { scrollSpyLock = false; updateScrollSpy(); }, 800);
+        });
+      });
+
+      // Brand COOKLY → beranda
+      document.getElementById('brandHome')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        exitSpecialModes();
+        scrollSpyLock = true;
+        setActiveNav('#home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        history.replaceState(null, '', '#home');
+        setTimeout(() => { scrollSpyLock = false; }, 800);
       });
     });
   </script>
